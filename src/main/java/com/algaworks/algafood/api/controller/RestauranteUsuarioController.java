@@ -1,0 +1,49 @@
+package com.algaworks.algafood.api.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.algaworks.algafood.api.assembler.GenericModelAssembler;
+import com.algaworks.algafood.api.model.UsuarioModel;
+import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.model.Usuario;
+import com.algaworks.algafood.domain.service.CadastroRestauranteService;
+
+@RestController
+@RequestMapping(value = "/restaurantes/{restauranteId}/responsaveis")
+public class RestauranteUsuarioController {
+	
+	@Autowired
+	private CadastroRestauranteService cadastroRestauranteService;
+	
+	@Autowired
+	private GenericModelAssembler<UsuarioModel, Usuario> usuarioModelAssembler;
+	
+	@GetMapping
+	public ResponseEntity<List<UsuarioModel>> listar(@PathVariable Long restauranteId){
+		Restaurante restaurante = cadastroRestauranteService.buscar(restauranteId);
+		List<UsuarioModel> responsaveis = usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis(), UsuarioModel.class);		
+		return ResponseEntity.ok(responsaveis);
+	}
+	
+	@PutMapping(value = "/{usuarioId}")
+	public ResponseEntity<Void> associarResponsavel(@PathVariable Long restauranteId, @PathVariable Long usuarioId){
+		cadastroRestauranteService.associarResponsavel(restauranteId, usuarioId);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@DeleteMapping(value = "/{usuarioId}")
+	public ResponseEntity<Void> desassociarResponsavel(@PathVariable Long restauranteId, @PathVariable Long usuarioId){
+		cadastroRestauranteService.desassociarResponsavel(restauranteId, usuarioId);
+		return ResponseEntity.noContent().build();
+	}
+
+}
