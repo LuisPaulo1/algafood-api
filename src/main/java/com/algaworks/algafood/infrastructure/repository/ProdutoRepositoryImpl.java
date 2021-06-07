@@ -20,5 +20,11 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQueries {
 	public FotoProduto save(FotoProduto foto) {
 		return manager.merge(foto);
 	}
+
+	@Transactional
+	@Override
+	public void delete(FotoProduto foto) {
+		manager.remove(foto);
+	}
 	
 }
