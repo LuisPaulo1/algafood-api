@@ -28,6 +28,7 @@ public class RestauranteProdutoFotoController {
 		
 		System.out.println(fotoProdutoInput.getDescricao());
 		System.out.println(arquivoFoto);
+		System.out.println(fotoProdutoInput.getArquivo());
 		System.out.println(fotoProdutoInput.getArquivo().getContentType());
 		
 		try {
