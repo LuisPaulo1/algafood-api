@@ -18,7 +18,7 @@ public class LocalFotoStorageService implements FotoStorageService {
 	@Override
 	public void armazenar(NovaFoto novaFoto) {
 		try {
-			Path arquivoPath = getArquivoPath(novaFoto.getNomeAquivo());
+			Path arquivoPath = getArquivoPath(novaFoto.getNomeArquivo());
 			
 			FileCopyUtils.copy(novaFoto.getInputStream(), 
 					Files.newOutputStream(arquivoPath));
