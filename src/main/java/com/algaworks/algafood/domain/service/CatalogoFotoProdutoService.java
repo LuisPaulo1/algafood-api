@@ -28,8 +28,7 @@ public class CatalogoFotoProdutoService {
 		String nomeNovoArquivo = fotoStorageService.gerarNomeArquivo(foto.getNomeArquivo());
 		String nomeArquivoExistente = null;
 		
-		Optional<FotoProduto> fotoExistente = produtoRepository
-				.findFotoById(restauranteId, produtoId);
+		Optional<FotoProduto> fotoExistente = produtoRepository.findFotoById(restauranteId, produtoId);
 		
 		if (fotoExistente.isPresent()) {
 			nomeArquivoExistente = fotoExistente.get().getNomeArquivo();
