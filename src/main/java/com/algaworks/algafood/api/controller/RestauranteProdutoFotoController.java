@@ -11,6 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -93,6 +94,12 @@ public class RestauranteProdutoFotoController {
 		}catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
+	}
+	
+	@DeleteMapping
+	public ResponseEntity<Void> remover(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+		catalogoFotoProdutoService.excluir(restauranteId, produtoId);
+		return ResponseEntity.noContent().build();
 	}
 	
 	private void verificarCompatibilidadeMediaType(MediaType mediaTypeFoto, 

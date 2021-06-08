@@ -11,6 +11,7 @@ import com.algaworks.algafood.domain.exception.FotoProdutoNaoEncontradoException
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
 import com.algaworks.algafood.domain.service.FotoStorageService.NovaFoto;
+import com.algaworks.algafood.infrastructure.service.storage.LocalFotoStorageService;
 
 @Service
 public class CatalogoFotoProdutoService {
@@ -20,6 +21,9 @@ public class CatalogoFotoProdutoService {
 	
 	@Autowired
 	private FotoStorageService fotoStorageService;
+	
+	@Autowired
+	private LocalFotoStorageService localFotoStorageService;
 	
 	@Transactional
 	public FotoProduto salvar(FotoProduto foto, InputStream dadosArquivo) {
@@ -54,6 +58,14 @@ public class CatalogoFotoProdutoService {
 		FotoProduto fotoProduto = produtoRepository.findFotoById(restauranteId, produtoId)
 				.orElseThrow(() -> new FotoProdutoNaoEncontradoException(restauranteId, produtoId));
 		return fotoProduto;
+	}
+	
+	@Transactional
+	public void excluir(Long restauranteId, Long produtoId) {
+		FotoProduto fotoProduto = buscar(restauranteId, produtoId);		
+		produtoRepository.delete(fotoProduto);		
+		produtoRepository.flush();		
+		localFotoStorageService.remover(fotoProduto.getNomeArquivo());
 	}
 	
 }
