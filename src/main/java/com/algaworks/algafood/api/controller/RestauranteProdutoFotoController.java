@@ -1,13 +1,14 @@
 package com.algaworks.algafood.api.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -28,7 +29,8 @@ import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
-import com.algaworks.algafood.infrastructure.service.storage.LocalFotoStorageService;
+import com.algaworks.algafood.domain.service.FotoStorageService;
+import com.algaworks.algafood.domain.service.FotoStorageService.FotoRecuperada;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
@@ -40,8 +42,8 @@ public class RestauranteProdutoFotoController {
 	@Autowired
 	private CatalogoFotoProdutoService catalogoFotoProdutoService;
 	
-	@Autowired(required = false)
-	private LocalFotoStorageService localFotoStorageService;
+	@Autowired
+	private FotoStorageService fotoStorageService;
 	
 	@Autowired
 	private GenericModelAssembler<FotoProdutoModel, FotoProduto>  fotoProdutoModelAssembler;
@@ -76,7 +78,7 @@ public class RestauranteProdutoFotoController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, 
+	public ResponseEntity<?> servirFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, 
 			@RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
 		try {
 			FotoProduto fotoProduto = catalogoFotoProdutoService.buscar(restauranteId, produtoId);
@@ -84,13 +86,20 @@ public class RestauranteProdutoFotoController {
 			MediaType mediaTypeFoto = MediaType.parseMediaType(fotoProduto.getContentType());
 			List<MediaType> mediaTypesAceitas = MediaType.parseMediaTypes(acceptHeader);
 			
-			verificarCompatibilidadeMediaType(mediaTypeFoto, mediaTypesAceitas);			
+			verificarCompatibilidadeMediaType(mediaTypeFoto, mediaTypesAceitas);	
 			
-			InputStream inputStream = localFotoStorageService.recuperar(fotoProduto.getNomeArquivo());
+			FotoRecuperada fotoRecuperada = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
 			
-			return ResponseEntity.ok()
-					.contentType(mediaTypeFoto)
-					.body(new InputStreamResource(inputStream));
+			if (fotoRecuperada.temUrl()) {
+				return ResponseEntity
+						.status(HttpStatus.FOUND)
+						.header(HttpHeaders.LOCATION, fotoRecuperada.getUrl())
+						.build();
+			} else {
+				return ResponseEntity.ok()
+						.contentType(mediaTypeFoto)
+						.body(new InputStreamResource(fotoRecuperada.getInputStream()));
+			}
 		}catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
