@@ -40,7 +40,7 @@ public class RestauranteProdutoFotoController {
 	@Autowired
 	private CatalogoFotoProdutoService catalogoFotoProdutoService;
 	
-	@Autowired
+	@Autowired(required = false)
 	private LocalFotoStorageService localFotoStorageService;
 	
 	@Autowired
