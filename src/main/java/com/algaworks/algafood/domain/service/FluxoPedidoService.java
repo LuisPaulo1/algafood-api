@@ -20,7 +20,7 @@ public class FluxoPedidoService {
 	public void confirmar(String codigo) {
 		Pedido pedido = emissaoPedidoService.buscar(codigo);
 		pedido.confirmar();		
-		pedidoRepository.save(pedido);
+		pedidoRepository.save(pedido);		
 	}
 	
 	@Transactional
