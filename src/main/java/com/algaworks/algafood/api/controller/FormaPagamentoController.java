@@ -1,8 +1,10 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,13 +39,17 @@ public class FormaPagamentoController {
 	@GetMapping
 	public ResponseEntity<List<FormaPagamentoModel>> listar(){
 		List<FormaPagamentoModel> formaPagamentos = formaPagamentoModelAssembler.toCollectionModel(cadastroFormaPagamento.listar(), FormaPagamentoModel.class);		
-		return ResponseEntity.ok(formaPagamentos);
+		return ResponseEntity.ok()
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				.body(formaPagamentos);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long id){
 		FormaPagamentoModel formaPagamento = formaPagamentoModelAssembler.toModel(cadastroFormaPagamento.buscar(id), FormaPagamentoModel.class);		
-		return ResponseEntity.ok(formaPagamento);		
+		return ResponseEntity.ok()				
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))				
+				.body(formaPagamento);		
 	}
 	
 	@PostMapping	
