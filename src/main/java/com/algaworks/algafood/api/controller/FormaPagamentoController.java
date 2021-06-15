@@ -48,7 +48,7 @@ public class FormaPagamentoController {
 	public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long id){
 		FormaPagamentoModel formaPagamento = formaPagamentoModelAssembler.toModel(cadastroFormaPagamento.buscar(id), FormaPagamentoModel.class);		
 		return ResponseEntity.ok()				
-				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))				
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))			
 				.body(formaPagamento);		
 	}
 	
