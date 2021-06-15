@@ -34,6 +34,10 @@ public class CadastroFormaPagamentoService {
 		return formaPagamentoRepository.getDataUltimaAtualizacao();
 	}
 	
+	public OffsetDateTime getDataAtualizacaoById(Long id) {
+		return formaPagamentoRepository.getDataAtualizacaoById(id);
+	}	
+	
 	@Transactional
 	public FormaPagamento salvar(FormaPagamento formaPagamento) {
 		return formaPagamentoRepository.save(formaPagamento);
