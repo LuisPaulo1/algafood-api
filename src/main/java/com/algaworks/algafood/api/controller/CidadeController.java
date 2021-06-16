@@ -28,6 +28,7 @@ import com.algaworks.algafood.domain.service.CadastroCidadeService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Api(tags = "Cidades")
 @RestController
@@ -55,7 +56,7 @@ public class CidadeController {
 
 	@ApiOperation("Busca uma cidade por ID")
 	@GetMapping("/{id}")
-	public ResponseEntity<CidadeModel> buscar(@PathVariable Long id) {		
+	public ResponseEntity<CidadeModel> buscar(@ApiParam("ID de uma cidade") @PathVariable Long id) {		
 		CidadeModel cidade = cidadeModelAssembler.toModel(cadastroCidade.buscar(id), CidadeModel.class);		
 		return ResponseEntity.ok(cidade);		
 	}
@@ -70,7 +71,7 @@ public class CidadeController {
 	
 	@ApiOperation("Atualiza uma cidade por ID")
 	@PutMapping("/{id}")
-	public ResponseEntity<CidadeModel> atualizar(@PathVariable Long id, @RequestBody @Valid CidadeInput cidadeInput) {
+	public ResponseEntity<CidadeModel> atualizar(@ApiParam("ID de uma cidade") @PathVariable Long id, @RequestBody @Valid CidadeInput cidadeInput) {
 		Cidade cidadeAtual = cadastroCidade.buscar(id);		
 		cidadeAtual.setEstado(new Estado());
 		cidadeInputDisassembler.copyToDomainObject(cidadeInput, cidadeAtual);		
@@ -81,7 +82,7 @@ public class CidadeController {
 	
 	@ApiOperation("Exclui uma cidade por ID")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> remover(@PathVariable Long id) {		
+	public ResponseEntity<Void> remover(@ApiParam("ID de uma cidade") @PathVariable Long id) {		
 		cadastroCidade.excluir(id);
 		return ResponseEntity.noContent().build();		
 	}
