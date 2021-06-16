@@ -10,6 +10,7 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -23,7 +24,14 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 			.select()
 				.apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
 				.build()
-				.apiInfo(apiInfo());		
+				.apiInfo(apiInfo())
+				.tags(tags()[0], tags());		
+	}
+	
+	private Tag[] tags() {
+	    return new Tag[] {
+	    	new Tag("Cidades", "Gerencia as cidades")	        
+	    };
 	}
 	
 	public ApiInfo apiInfo() {
