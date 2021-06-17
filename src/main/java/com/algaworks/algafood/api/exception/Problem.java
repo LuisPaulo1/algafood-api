@@ -42,6 +42,7 @@ public class Problem {
 			position = 30)
 	private List<Object> objects;
 	
+	@ApiModel("ObjetoProblema")
 	@Getter
 	@Builder
 	public static class Object {
