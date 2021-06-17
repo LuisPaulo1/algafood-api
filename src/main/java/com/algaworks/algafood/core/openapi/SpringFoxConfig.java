@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.algaworks.algafood.api.exception.Problem;
+import com.fasterxml.classmate.TypeResolver;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseBuilder;
@@ -27,6 +30,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
 	@Bean
 	public Docket apiDocket() {
+		
+		var typeResolver = new TypeResolver();
+		
 		return new Docket(DocumentationType.OAS_30)
 			.select()
 				.apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
@@ -37,7 +43,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.globalResponses(HttpMethod.GET, globalGetResponseMessages())
 				.globalResponses(HttpMethod.POST, globalPostResponseMessages())
 				.globalResponses(HttpMethod.PUT, globalPutResponseMessages())
-				.globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages());
+				.globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
+				.additionalModels(typeResolver.resolve(Problem.class));
 	}	
 	
 	private ApiInfo apiInfo() {
