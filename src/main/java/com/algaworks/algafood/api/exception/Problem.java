@@ -21,7 +21,7 @@ public class Problem {
 	@ApiModelProperty(example = "400", position = 1)
 	private Integer status;	
 	
-	@ApiModelProperty(example = "2019-12-01T18:09:02.70844Z", position = 5)
+	@ApiModelProperty(position = 5)
 	private OffsetDateTime timestamp;
 	
 	@ApiModelProperty(example = "https://algafood.com.br/dados-invalidos", position = 10)
