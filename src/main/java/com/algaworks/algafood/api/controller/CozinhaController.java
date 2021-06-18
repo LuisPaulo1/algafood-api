@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class CozinhaController {
 	private GenericModelAssembler<CozinhaModel, Cozinha> cozinhaModelAssembler;
 	
 	@GetMapping
-	public ResponseEntity<Page<CozinhaModel>> listar(Pageable pageable) {
+	public ResponseEntity<Page<CozinhaModel>> listar(@PageableDefault(size = 10) Pageable pageable) {
 		Page<Cozinha> cozinhasPage = cadastroCozinha.listar(pageable);
 		List<CozinhaModel> cozinhasModel = cozinhaModelAssembler.toCollectionModel(cozinhasPage.getContent(), CozinhaModel.class);				
 		Page<CozinhaModel> CozinhasModelPage = new PageImpl<>(cozinhasModel, pageable, cozinhasPage.getTotalElements());
