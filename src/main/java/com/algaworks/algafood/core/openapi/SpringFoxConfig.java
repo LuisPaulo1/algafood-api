@@ -38,6 +38,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 @EnableOpenApi
 public class SpringFoxConfig implements WebMvcConfigurer {
 
+	
 	@Bean
 	public Docket apiDocket() {
 		
@@ -57,9 +58,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.additionalModels(typeResolver.resolve(Problem.class))
 				.additionalModels(typeResolver.resolve(CozinhasModelOpenApi.class))
 				.ignoredParameterTypes(ServletWebRequest.class)
-				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)	
+				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
 				.alternateTypeRules(AlternateTypeRules.newRule(
-						typeResolver.resolve(Page.class, CozinhaModel.class), 
+						typeResolver.resolve(Page.class, CozinhaModel.class),
 						CozinhasModelOpenApi.class));
 	}	
 	
@@ -76,7 +77,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 		return new Tag[] {
 				new Tag("Cidades", "Gerencia as cidades"),
 				new Tag("Grupos", "Gerencia os grupos de usuários"),
-				new Tag("Cozinhas", "Gerencia as cozinhas")
+				new Tag("Cozinhas", "Gerencia as cozinhas"),
+				new Tag("Formas de pagamento", "Gerencia as formas de pagamento")
 		};
 	}
 	
