@@ -1,17 +1,21 @@
-package com.algaworks.algafood.api.model;
+package com.algaworks.algafood.api.openapi.model;
 
 import java.math.BigDecimal;
 
+import com.algaworks.algafood.api.model.CozinhaModel;
+
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+@ApiModel("RestauranteBasicoModel")
 @Setter
 @Getter
-public class RestauranteModel {
-	
+public class RestauranteBasicoModelOpenApi {
+
 	@ApiModelProperty(example = "1")
-	private Long id;	
+	private Long id;
 	
 	@ApiModelProperty(example = "Thai Gourmet")
 	private String nome;
@@ -20,7 +24,5 @@ public class RestauranteModel {
 	private BigDecimal taxaFrete;
 	
 	private CozinhaModel cozinha;
-	private Boolean ativo;
-	private Boolean aberto;
-	private EnderecoModel endereco;
+	
 }

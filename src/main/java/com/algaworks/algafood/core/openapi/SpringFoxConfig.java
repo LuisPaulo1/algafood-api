@@ -6,11 +6,13 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -18,9 +20,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.algaworks.algafood.api.exception.Problem;
 import com.algaworks.algafood.api.model.CozinhaModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
+import com.algaworks.algafood.api.model.RestauranteModel;
 import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PedidosResumoModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.RestauranteBasicoModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -61,11 +65,17 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.ignoredParameterTypes(ServletWebRequest.class)
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)				
 				.alternateTypeRules(AlternateTypeRules.newRule(
-						typeResolver.resolve(Page.class, CozinhaModel.class),
-						CozinhasModelOpenApi.class))
+						typeResolver.resolve(ResponseEntity.class, typeResolver.resolve(Page.class, CozinhaModel.class)),
+						typeResolver.resolve(List.class, CozinhasModelOpenApi.class),
+						Ordered.HIGHEST_PRECEDENCE))
 				.alternateTypeRules(AlternateTypeRules.newRule(
-	                    typeResolver.resolve(Page.class, PedidoResumoModel.class),
-	                    PedidosResumoModelOpenApi.class));
+	                    typeResolver.resolve(ResponseEntity.class, typeResolver.resolve(Page.class, PedidoResumoModel.class)),
+	                    typeResolver.resolve(List.class, PedidosResumoModelOpenApi.class),
+	                    Ordered.HIGHEST_PRECEDENCE))
+				.alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(ResponseEntity.class, typeResolver.resolve(List.class, RestauranteModel.class)),
+	                    typeResolver.resolve(List.class, RestauranteBasicoModelOpenApi.class), 
+	                    Ordered.HIGHEST_PRECEDENCE));
 	}	
 	
 	private ApiInfo apiInfo() {
@@ -83,7 +93,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				new Tag("Grupos", "Gerencia os grupos de usuários"),
 				new Tag("Cozinhas", "Gerencia as cozinhas"),
 				new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
-				new Tag("Pedidos", "Gerencia os pedidos")
+				new Tag("Restaurantes", "Gerencia os restaurantes")
 		};
 	}
 	
