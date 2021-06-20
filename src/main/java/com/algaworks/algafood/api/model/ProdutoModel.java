@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.model;
 
 import java.math.BigDecimal;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +10,19 @@ import lombok.Setter;
 @Setter
 public class ProdutoModel {
 	
-	private Long id;	
-	private String nome;	
-	private String descricao;	
-	private BigDecimal preco;	
+	@ApiModelProperty(example = "1")
+	private Long id;
+
+	@ApiModelProperty(example = "Espetinho de Cupim")
+	private String nome;
+
+	@ApiModelProperty(example = "Acompanha farinha, mandioca e vinagrete")
+	private String descricao;
+
+	@ApiModelProperty(example = "12.50")
+	private BigDecimal preco;
+
+	@ApiModelProperty(example = "true")
 	private Boolean ativo;
 
 }
