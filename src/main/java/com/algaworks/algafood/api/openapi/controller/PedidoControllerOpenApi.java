@@ -20,13 +20,13 @@ import io.swagger.annotations.ApiResponses;
 public interface PedidoControllerOpenApi {
    
     @ApiOperation("Pesquisa os pedidos")
-    public ResponseEntity<Page<PedidoResumoModel>> pesquisar(PedidoFilter filtro, Pageable pageable);
+    ResponseEntity<Page<PedidoResumoModel>> pesquisar(PedidoFilter filtro, Pageable pageable);
     
     @ApiOperation("Busca um pedido por código")
     @ApiResponses({
     	@ApiResponse(code = 404, message = "Pedido não encontrado", response = Problem.class)
     })
-    public ResponseEntity<PedidoModel> buscar(
+    ResponseEntity<PedidoModel> buscar(
     		@ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55")
     		String codigoPedido);
     
@@ -34,6 +34,6 @@ public interface PedidoControllerOpenApi {
     @ApiResponses({
         @ApiResponse(code = 201, message = "Pedido registrado"),
     })
-    public ResponseEntity<PedidoModel> adicionar(PedidoInput pedidoInput);    
+    ResponseEntity<PedidoModel> adicionar(PedidoInput pedidoInput);    
   
 }

@@ -18,14 +18,14 @@ import io.swagger.annotations.ApiResponses;
 public interface GrupoControllerOpenApi {
 
 	@ApiOperation("Lista os grupos")
-	public ResponseEntity<List<GrupoModel>> listar();
+	ResponseEntity<List<GrupoModel>> listar();
 	
 	@ApiOperation("Busca um grupo por ID")
 	@ApiResponses({
 		@ApiResponse(code = 400, message = "ID da grupo inválido", response = Problem.class),
 		@ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)
 	})	
-	public ResponseEntity<GrupoModel> buscar(@ApiParam(value = "ID de um grupo", example = "1") Long id);
+	ResponseEntity<GrupoModel> buscar(@ApiParam(value = "ID de um grupo") Long id);
 	
 	@ApiOperation("Cadastra um grupo")
 	@ApiResponses({
@@ -38,13 +38,13 @@ public interface GrupoControllerOpenApi {
 		@ApiResponse(code = 200, message = "Grupo atualizado"),
 		@ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)
 	})
-	public ResponseEntity<GrupoModel> atualizar(@ApiParam(value = "ID de um grupo", example = "1") Long id, GrupoInput grupoInput);
+	ResponseEntity<GrupoModel> atualizar(@ApiParam(value = "ID de um grupo") Long id, GrupoInput grupoInput);
 	
 	@ApiOperation("Exclui um grupo por ID")
 	@ApiResponses({
 		@ApiResponse(code = 204, message = "Grupo excluído"),
 		@ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)
 	})
-	public ResponseEntity<Void> remover(@ApiParam(value = "ID de um grupo", example = "1") Long grupoId);
+	ResponseEntity<Void> remover(@ApiParam(value = "ID de um grupo") Long grupoId);
 	
 }

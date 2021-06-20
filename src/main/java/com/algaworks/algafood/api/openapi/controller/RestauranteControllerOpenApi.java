@@ -19,73 +19,73 @@ import io.swagger.annotations.ApiResponses;
 public interface RestauranteControllerOpenApi {
 
     @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)   
-    public ResponseEntity<List<RestauranteModel>> listar();   
+    ResponseEntity<List<RestauranteModel>> listar();   
     
     @ApiOperation("Busca um restaurante por ID")
     @ApiResponses({
         @ApiResponse(code = 400, message = "ID do restaurante inválido", response = Problem.class),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    public ResponseEntity<RestauranteModel> buscar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    ResponseEntity<RestauranteModel> buscar(@ApiParam(value = "ID de um restaurante") Long restauranteId);
     
     @ApiOperation("Cadastra um restaurante")
     @ApiResponses({
         @ApiResponse(code = 201, message = "Restaurante cadastrado"),
     })
-    public ResponseEntity<RestauranteModel> adicionar(RestauranteInput restauranteInput);
+    ResponseEntity<RestauranteModel> adicionar(RestauranteInput restauranteInput);
     
     @ApiOperation("Atualiza um restaurante por ID")
     @ApiResponses({
         @ApiResponse(code = 200, message = "Restaurante atualizado"),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    public ResponseEntity<RestauranteModel> atualizar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId, RestauranteInput restauranteInput);
+    ResponseEntity<RestauranteModel> atualizar(@ApiParam(value = "ID de um restaurante") Long restauranteId, RestauranteInput restauranteInput);
     
     @ApiOperation("Ativa um restaurante por ID")
     @ApiResponses({
         @ApiResponse(code = 204, message = "Restaurante ativado com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    public ResponseEntity<Void> ativar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    ResponseEntity<Void> ativar(@ApiParam(value = "ID de um restaurante") Long restauranteId);
     
     @ApiOperation("Inativa um restaurante por ID")
     @ApiResponses({
         @ApiResponse(code = 204, message = "Restaurante inativado com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    public ResponseEntity<Void> inativar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    ResponseEntity<Void> inativar(@ApiParam(value = "ID de um restaurante") Long restauranteId);
     
     @ApiOperation("Ativa múltiplos restaurantes")
     @ApiResponses({
         @ApiResponse(code = 204, message = "Restaurantes ativados com sucesso")
     })
-    public ResponseEntity<Void> ativarMultiplos(@ApiParam(name = "corpo", value = "IDs de restaurantes") List<Long> restauranteIds);
+    ResponseEntity<Void> ativarMultiplos(@ApiParam(name = "corpo", value = "IDs de restaurantes") List<Long> restauranteIds);
     
     @ApiOperation("Inativa múltiplos restaurantes")
     @ApiResponses({
         @ApiResponse(code = 204, message = "Restaurantes ativados com sucesso")
     })
-    public ResponseEntity<Void> inativarMultiplos(@ApiParam(name = "corpo", value = "IDs de restaurantes") List<Long> restauranteIds);
+    ResponseEntity<Void> inativarMultiplos(@ApiParam(name = "corpo", value = "IDs de restaurantes") List<Long> restauranteIds);
 
     @ApiOperation("Abre um restaurante por ID")
     @ApiResponses({
         @ApiResponse(code = 204, message = "Restaurante aberto com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    public ResponseEntity<Void> abrir(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    ResponseEntity<Void> abrir(@ApiParam(value = "ID de um restaurante") Long restauranteId);
     
     @ApiOperation("Fecha um restaurante por ID")
     @ApiResponses({
         @ApiResponse(code = 204, message = "Restaurante fechado com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    public ResponseEntity<Void> fechar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
+    ResponseEntity<Void> fechar(@ApiParam(value = "ID de um restaurante", example = "1") Long restauranteId);
     
     @ApiOperation("Exclui um restaurante por ID")
 	@ApiResponses({
 		@ApiResponse(code = 204, message = "Restaurante excluído"),
 		@ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
 	})
-    public ResponseEntity<Void> remover(@ApiParam("ID de uma cidade") Long id);
+    ResponseEntity<Void> remover(@ApiParam("ID de uma cidade") Long id);
 
 }

@@ -18,33 +18,33 @@ import io.swagger.annotations.ApiResponses;
 public interface CidadeControllerOpenApi {
 
 	@ApiOperation("Lista as cidades")
-	public ResponseEntity<List<CidadeModel>> listar();
+	ResponseEntity<List<CidadeModel>> listar();
 	
 	@ApiOperation("Busca uma cidade por ID")
 	@ApiResponses({
 		@ApiResponse(code = 400, message = "ID da cidade inválido", response = Problem.class),
 		@ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
 	})
-	public ResponseEntity<CidadeModel> buscar(@ApiParam("ID de uma cidade") Long id);
+	ResponseEntity<CidadeModel> buscar(@ApiParam("ID de uma cidade") Long id);
 	
 	@ApiOperation("Cadastra uma cidade")
 	@ApiResponses({
 		@ApiResponse(code = 201, message = "Cidade cadastrada"),
 	})
-	public ResponseEntity<CidadeModel> adicionar(CidadeInput cidadeInput);
+	ResponseEntity<CidadeModel> adicionar(CidadeInput cidadeInput);
 	
 	@ApiOperation("Atualiza uma cidade por ID")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "Cidade atualizada"),
 		@ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
 	})
-	public ResponseEntity<CidadeModel> atualizar(@ApiParam("ID de uma cidade") Long id, CidadeInput cidadeInput);
+	ResponseEntity<CidadeModel> atualizar(@ApiParam("ID de uma cidade") Long id, CidadeInput cidadeInput);
 	
 	@ApiOperation("Exclui uma cidade por ID")
 	@ApiResponses({
 		@ApiResponse(code = 204, message = "Cidade excluída"),
 		@ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
 	})
-	public ResponseEntity<Void> remover(@ApiParam("ID de uma cidade") Long id);
+	ResponseEntity<Void> remover(@ApiParam("ID de uma cidade") Long id);
 	
 }

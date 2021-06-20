@@ -32,6 +32,7 @@ import springfox.documentation.builders.RepresentationBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseBuilder;
 import springfox.documentation.oas.annotations.EnableOpenApi;
+import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -61,22 +62,20 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
 				.globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
 				.additionalModels(typeResolver.resolve(Problem.class))
-				.additionalModels(typeResolver.resolve(CozinhasModelOpenApi.class))
 				.ignoredParameterTypes(ServletWebRequest.class)
-				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)				
-				.alternateTypeRules(AlternateTypeRules.newRule(
-						typeResolver.resolve(ResponseEntity.class, typeResolver.resolve(Page.class, CozinhaModel.class)),
-						typeResolver.resolve(List.class, CozinhasModelOpenApi.class),
-						Ordered.HIGHEST_PRECEDENCE))
-				.alternateTypeRules(AlternateTypeRules.newRule(
-	                    typeResolver.resolve(ResponseEntity.class, typeResolver.resolve(Page.class, PedidoResumoModel.class)),
-	                    typeResolver.resolve(List.class, PedidosResumoModelOpenApi.class),
-	                    Ordered.HIGHEST_PRECEDENCE))
-				.alternateTypeRules(AlternateTypeRules.newRule(
-	                    typeResolver.resolve(ResponseEntity.class, typeResolver.resolve(List.class, RestauranteModel.class)),
-	                    typeResolver.resolve(List.class, RestauranteBasicoModelOpenApi.class), 
-	                    Ordered.HIGHEST_PRECEDENCE));
+				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+				.alternateTypeRules(newRule(Page.class, CozinhaModel.class, CozinhasModelOpenApi.class))
+				.alternateTypeRules(newRule(Page.class, PedidoResumoModel.class, PedidosResumoModelOpenApi.class))
+				.alternateTypeRules(newRule(List.class, RestauranteModel.class, RestauranteBasicoModelOpenApi.class));
 	}	
+	
+	private <T, M, K> AlternateTypeRule newRule(Class<T> typeReturn, Class<M> objectModel, Class<K> objectModelOpenApi) {
+		var typeResolver = new TypeResolver();
+		return AlternateTypeRules.newRule(
+				typeResolver.resolve(ResponseEntity.class, typeResolver.resolve(typeReturn, objectModel)),
+				typeResolver.resolve(List.class, objectModelOpenApi),
+				Ordered.HIGHEST_PRECEDENCE);		
+	}
 	
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
@@ -93,7 +92,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				new Tag("Grupos", "Gerencia os grupos de usuários"),
 				new Tag("Cozinhas", "Gerencia as cozinhas"),
 				new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
-				new Tag("Restaurantes", "Gerencia os restaurantes")
+				new Tag("Restaurantes", "Gerencia os restaurantes"),
+				new Tag("Estados", "Gerencia os estados")
 		};
 	}
 	
