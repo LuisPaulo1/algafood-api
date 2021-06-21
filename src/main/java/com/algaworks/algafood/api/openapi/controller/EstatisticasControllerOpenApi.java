@@ -24,8 +24,7 @@ public interface EstatisticasControllerOpenApi {
         })
     List<VendaDiaria> consultarVendasDiarias(
     		VendaDiariaFilter filtro,            
-            @ApiParam(value = "Deslocamento de horário a ser considerado na consulta em relação ao UTC", defaultValue = "+00:00")
-            String timeOffset);
+            @ApiParam(value = "Deslocamento de horário a ser considerado na consulta em relação ao UTC", defaultValue = "+00:00") String timeOffset);
     
     ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter filtro, String timeOffset);
 }
