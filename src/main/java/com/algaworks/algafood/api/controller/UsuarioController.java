@@ -1,10 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.GenericInputDisassembler;
-import com.algaworks.algafood.api.assembler.GenericModelAssembler;
+import com.algaworks.algafood.api.assembler.UsuarioModelAssembler;
 import com.algaworks.algafood.api.model.UsuarioModel;
 import com.algaworks.algafood.api.model.input.SenhaInput;
 import com.algaworks.algafood.api.model.input.UsuarioComSenhaInput;
@@ -35,26 +34,26 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 				
 	@Autowired
 	private GenericInputDisassembler<UsuarioInput, Usuario> usuarioInputDisassembler;
-	
+			
 	@Autowired
-	private GenericModelAssembler<UsuarioModel, Usuario> usuarioModelAssembler;
+    private UsuarioModelAssembler usuarioModelAssembler;
 
 	@GetMapping
-	public ResponseEntity<List<UsuarioModel>> listar() {
-		List<UsuarioModel> usuarios = usuarioModelAssembler.toCollectionModel(cadastroUsuario.listar(), UsuarioModel.class);		
-		return ResponseEntity.ok(usuarios);
+	public CollectionModel<UsuarioModel> listar() {
+		CollectionModel<UsuarioModel> usuarios = usuarioModelAssembler.toCollectionModel(cadastroUsuario.listar());		
+		return usuarios;
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioModel> buscar(@PathVariable Long id) {
-		UsuarioModel usuario = usuarioModelAssembler.toModel(cadastroUsuario.buscar(id), UsuarioModel.class);		
+		UsuarioModel usuario = usuarioModelAssembler.toModel(cadastroUsuario.buscar(id));		
 		return ResponseEntity.ok(usuario);
 	}
 
 	@PostMapping
 	public ResponseEntity<UsuarioModel> adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioComSenhaInput) {
 		Usuario usuario = usuarioInputDisassembler.toDomainObject(usuarioComSenhaInput, Usuario.class);
-		UsuarioModel usuarioModel =  usuarioModelAssembler.toModel(cadastroUsuario.salvar(usuario), UsuarioModel.class);
+		UsuarioModel usuarioModel =  usuarioModelAssembler.toModel(cadastroUsuario.salvar(usuario));
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioModel);
 	}
 
@@ -62,7 +61,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 	public ResponseEntity<UsuarioModel> atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioInput atualizarUsuarioInput) {		
 		Usuario usuarioAtual = cadastroUsuario.buscar(id);
 		usuarioInputDisassembler.copyToDomainObject(atualizarUsuarioInput, usuarioAtual);
-		UsuarioModel usuarioModel = usuarioModelAssembler.toModel(cadastroUsuario.salvar(usuarioAtual), UsuarioModel.class);
+		UsuarioModel usuarioModel = usuarioModelAssembler.toModel(cadastroUsuario.salvar(usuarioAtual));
 		return ResponseEntity.ok(usuarioModel);		
 	}
 	

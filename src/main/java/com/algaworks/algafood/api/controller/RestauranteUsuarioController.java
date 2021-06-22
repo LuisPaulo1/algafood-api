@@ -1,8 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,11 +11,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.GenericModelAssembler;
+import com.algaworks.algafood.api.assembler.UsuarioModelAssembler;
 import com.algaworks.algafood.api.model.UsuarioModel;
 import com.algaworks.algafood.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import com.algaworks.algafood.domain.model.Restaurante;
-import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
@@ -27,13 +25,13 @@ public class RestauranteUsuarioController implements RestauranteUsuarioResponsav
 	private CadastroRestauranteService cadastroRestauranteService;
 	
 	@Autowired
-	private GenericModelAssembler<UsuarioModel, Usuario> usuarioModelAssembler;
+    private UsuarioModelAssembler usuarioModelAssembler;
 	
 	@GetMapping
-	public ResponseEntity<List<UsuarioModel>> listar(@PathVariable Long restauranteId){
+	public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId){
 		Restaurante restaurante = cadastroRestauranteService.buscar(restauranteId);
-		List<UsuarioModel> responsaveis = usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis(), UsuarioModel.class);		
-		return ResponseEntity.ok(responsaveis);
+		CollectionModel<UsuarioModel> responsaveis = usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis());		
+		return responsaveis;
 	}
 	
 	@PutMapping(value = "/{usuarioId}")
