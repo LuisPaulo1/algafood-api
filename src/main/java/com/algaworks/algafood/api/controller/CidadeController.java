@@ -29,6 +29,8 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @RestController
 @RequestMapping(path = "/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CidadeController implements CidadeControllerOpenApi {
@@ -53,8 +55,11 @@ public class CidadeController implements CidadeControllerOpenApi {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<CidadeModel> buscar(@PathVariable Long id) {		
-		CidadeModel cidade = cidadeModelAssembler.toModel(cadastroCidade.buscar(id), CidadeModel.class);		
-		return ResponseEntity.ok(cidade);		
+		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cadastroCidade.buscar(id), CidadeModel.class);		
+		cidadeModel.add(linkTo(CidadeController.class).slash(cidadeModel.getId()).withSelfRel());
+		cidadeModel.add(linkTo(CidadeController.class).withRel("cidades"));
+		cidadeModel.add(linkTo(EstadoController.class).slash(cidadeModel.getEstado().getId()).withRel("estado"));
+		return ResponseEntity.ok(cidadeModel);		
 	}
 	
 	@PostMapping
