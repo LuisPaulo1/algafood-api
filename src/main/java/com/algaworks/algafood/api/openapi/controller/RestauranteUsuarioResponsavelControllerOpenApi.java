@@ -19,7 +19,7 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
     @ApiResponses({
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    CollectionModel<UsuarioModel> listar(@ApiParam(value = "ID do restaurante") Long restauranteId);
+    ResponseEntity<CollectionModel<UsuarioModel>> listar(@ApiParam(value = "ID do restaurante") Long restauranteId);
 
     @ApiOperation("Desassociação de restaurante com usuário responsável")
     @ApiResponses({

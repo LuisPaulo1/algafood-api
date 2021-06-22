@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiResponses;
 public interface UsuarioControllerOpenApi {
 
     @ApiOperation("Lista os usuários")
-    CollectionModel<UsuarioModel> listar();
+    ResponseEntity<CollectionModel<UsuarioModel>> listar();
 
     @ApiOperation("Busca um usuário por ID")
     @ApiResponses({

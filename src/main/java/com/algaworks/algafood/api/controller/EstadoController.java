@@ -1,10 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.assembler.EstadoModelAssembler;
 import com.algaworks.algafood.api.assembler.GenericInputDisassembler;
-import com.algaworks.algafood.api.assembler.GenericModelAssembler;
 import com.algaworks.algafood.api.model.EstadoModel;
 import com.algaworks.algafood.api.model.input.EstadoInput;
 import com.algaworks.algafood.api.openapi.controller.EstadoControllerOpenApi;
@@ -36,24 +35,24 @@ public class EstadoController implements EstadoControllerOpenApi {
 	private GenericInputDisassembler<EstadoInput, Estado> estadoInputDisassembler;
 	
 	@Autowired
-	private GenericModelAssembler<EstadoModel, Estado> estadoModelAssembler;
+	private EstadoModelAssembler estadoModelAssembler;
 
 	@GetMapping
-	public ResponseEntity<List<EstadoModel>> listar() {
-		List<EstadoModel> estados = estadoModelAssembler.toCollectionModel(cadastroEstado.listar(), EstadoModel.class);		
+	public ResponseEntity<CollectionModel<EstadoModel>> listar() {
+		CollectionModel<EstadoModel> estados = estadoModelAssembler.toCollectionModel(cadastroEstado.listar());		
 		return ResponseEntity.ok(estados);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<EstadoModel> buscar(@PathVariable Long id) {
-		EstadoModel estado = estadoModelAssembler.toModel(cadastroEstado.buscar(id), EstadoModel.class);		
+		EstadoModel estado = estadoModelAssembler.toModel(cadastroEstado.buscar(id));		
 		return ResponseEntity.ok(estado);
 	}
 
 	@PostMapping
 	public ResponseEntity<EstadoModel> adicionar(@RequestBody @Valid EstadoInput estadoInput) {
 		Estado estado = estadoInputDisassembler.toDomainObject(estadoInput, Estado.class);
-		EstadoModel estadoModel =  estadoModelAssembler.toModel(cadastroEstado.salvar(estado), EstadoModel.class);
+		EstadoModel estadoModel =  estadoModelAssembler.toModel(cadastroEstado.salvar(estado));
 		return ResponseEntity.status(HttpStatus.CREATED).body(estadoModel);
 	}
 
@@ -61,7 +60,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 	public ResponseEntity<EstadoModel> atualizar(@PathVariable Long id, @RequestBody @Valid EstadoInput estadoInput) {		
 		Estado estadoAtual = cadastroEstado.buscar(id);
 		estadoInputDisassembler.copyToDomainObject(estadoInput, estadoAtual);
-		EstadoModel estadoModel = estadoModelAssembler.toModel(cadastroEstado.salvar(estadoAtual), EstadoModel.class);
+		EstadoModel estadoModel = estadoModelAssembler.toModel(cadastroEstado.salvar(estadoAtual));
 		return ResponseEntity.ok(estadoModel);		
 	}
 

@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiResponses;
 public interface CidadeControllerOpenApi {
 
 	@ApiOperation("Lista as cidades")
-	CollectionModel<CidadeModel> listar();
+	ResponseEntity<CollectionModel<CidadeModel>> listar();
 	
 	@ApiOperation("Busca uma cidade por ID")
 	@ApiResponses({

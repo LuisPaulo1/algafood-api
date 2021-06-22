@@ -29,6 +29,7 @@ import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 @RestController
 @RequestMapping(path = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsuarioController implements UsuarioControllerOpenApi {
+	
 	@Autowired
 	private CadastroUsuarioService cadastroUsuario;
 				
@@ -39,9 +40,9 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     private UsuarioModelAssembler usuarioModelAssembler;
 
 	@GetMapping
-	public CollectionModel<UsuarioModel> listar() {
+	public ResponseEntity<CollectionModel<UsuarioModel>> listar() {
 		CollectionModel<UsuarioModel> usuarios = usuarioModelAssembler.toCollectionModel(cadastroUsuario.listar());		
-		return usuarios;
+		return ResponseEntity.ok(usuarios);
 	}
 
 	@GetMapping("/{id}")

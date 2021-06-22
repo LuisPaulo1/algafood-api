@@ -2,11 +2,13 @@ package com.algaworks.algafood.api.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,9 +44,12 @@ public class CidadeController implements CidadeControllerOpenApi {
 	private CidadeModelAssembler cidadeModelAssembler;
 		
 	@GetMapping
-	public CollectionModel<CidadeModel> listar() {		
+	public ResponseEntity<CollectionModel<CidadeModel>> listar() {		
 		List<Cidade> todasCidades = cadastroCidade.listar();		
-		return cidadeModelAssembler.toCollectionModel(todasCidades);
+		CollectionModel<CidadeModel> cidadesModel = cidadeModelAssembler.toCollectionModel(todasCidades);
+		return ResponseEntity.ok()
+				.cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES))
+				.body(cidadesModel);
 	}
 
 	@GetMapping("/{id}")

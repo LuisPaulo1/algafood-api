@@ -31,11 +31,11 @@ public class RestauranteUsuarioController implements RestauranteUsuarioResponsav
     private UsuarioModelAssembler usuarioModelAssembler;
 	
 	@GetMapping
-	public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId){
+	public ResponseEntity<CollectionModel<UsuarioModel>> listar(@PathVariable Long restauranteId){
 		Restaurante restaurante = cadastroRestauranteService.buscar(restauranteId);
 		CollectionModel<UsuarioModel> responsaveis = usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis());		
 		responsaveis.removeLinks().add(linkTo(methodOn(RestauranteUsuarioController.class).listar(restauranteId)).withSelfRel());
-		return responsaveis;
+		return ResponseEntity.ok(responsaveis);
 	}
 	
 	@PutMapping(value = "/{usuarioId}")
