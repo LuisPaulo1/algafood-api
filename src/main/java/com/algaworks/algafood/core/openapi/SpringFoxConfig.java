@@ -69,11 +69,11 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.alternateTypeRules(newRule(List.class, RestauranteModel.class, RestauranteBasicoModelOpenApi.class));
 	}	
 	
-	private <T, M, K> AlternateTypeRule newRule(Class<T> typeReturn, Class<M> objectModel, Class<K> objectModelOpenApi) {
+	private <T, M, K> AlternateTypeRule newRule(Class<T> returnType, Class<M> modelObject, Class<K> modelObjectOpenApi) {
 		var typeResolver = new TypeResolver();
 		return AlternateTypeRules.newRule(
-				typeResolver.resolve(ResponseEntity.class, typeResolver.resolve(typeReturn, objectModel)),
-				typeResolver.resolve(List.class, objectModelOpenApi),
+				typeResolver.resolve(ResponseEntity.class, typeResolver.resolve(returnType, modelObject)),
+				typeResolver.resolve(List.class, modelObjectOpenApi),
 				Ordered.HIGHEST_PRECEDENCE);		
 	}
 	

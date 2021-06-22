@@ -1,16 +1,12 @@
 package com.algaworks.algafood.api.controller;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.net.URI;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.algaworks.algafood.api.assembler.CidadeModelAssembler;
 import com.algaworks.algafood.api.assembler.GenericInputDisassembler;
-import com.algaworks.algafood.api.assembler.GenericModelAssembler;
 import com.algaworks.algafood.api.model.CidadeModel;
 import com.algaworks.algafood.api.model.input.CidadeInput;
 import com.algaworks.algafood.api.openapi.controller.CidadeControllerOpenApi;
@@ -43,30 +39,24 @@ public class CidadeController implements CidadeControllerOpenApi {
 	private GenericInputDisassembler<CidadeInput, Cidade> cidadeInputDisassembler;
 	
 	@Autowired
-	private GenericModelAssembler<CidadeModel, Cidade> cidadeModelAssembler;	
+	private CidadeModelAssembler cidadeModelAssembler;
 		
 	@GetMapping
-	public ResponseEntity<List<CidadeModel>> listar() {
-		List<CidadeModel> cidades = cidadeModelAssembler
-				.toCollectionModel(cadastroCidade.listar(), CidadeModel.class);		
-		return ResponseEntity.ok()
-				.cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES))
-				.body(cidades);
+	public CollectionModel<CidadeModel> listar() {		
+		List<Cidade> todasCidades = cadastroCidade.listar();		
+		return cidadeModelAssembler.toCollectionModel(todasCidades);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<CidadeModel> buscar(@PathVariable Long id) {		
-		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cadastroCidade.buscar(id), CidadeModel.class);		
-		cidadeModel.add(linkTo(methodOn(CidadeController.class).buscar(id)).withSelfRel());
-		cidadeModel.add(linkTo(methodOn(CidadeController.class).listar()).withRel("cidades"));
-		cidadeModel.getEstado().add(linkTo(methodOn(EstadoController.class).buscar(cidadeModel.getEstado().getId())).withSelfRel());
+		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cadastroCidade.buscar(id));			
 		return ResponseEntity.ok(cidadeModel);		
 	}
 	
 	@PostMapping
 	public ResponseEntity<CidadeModel> adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
 		Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput, Cidade.class);
-		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cadastroCidade.salvar(cidade), CidadeModel.class);
+		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cadastroCidade.salvar(cidade));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(cidadeModel.getId()).toUri();	
 		return ResponseEntity.created(uri).body(cidadeModel);				
 	}
@@ -77,7 +67,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 		cidadeAtual.setEstado(new Estado());
 		cidadeInputDisassembler.copyToDomainObject(cidadeInput, cidadeAtual);		
 		cidadeAtual = cadastroCidade.salvar(cidadeAtual);
-		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidadeAtual, CidadeModel.class);		
+		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidadeAtual);		
 		return ResponseEntity.ok(cidadeModel);		
 	}
 
