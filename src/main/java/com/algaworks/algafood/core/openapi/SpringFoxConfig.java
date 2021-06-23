@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -64,7 +65,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.additionalModels(typeResolver.resolve(Problem.class))
 				.ignoredParameterTypes(ServletWebRequest.class)
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
-				.alternateTypeRules(newRule(Page.class, CozinhaModel.class, CozinhasModelOpenApi.class))
+				.alternateTypeRules(newRule(PagedModel.class, CozinhaModel.class, CozinhasModelOpenApi.class))
 				.alternateTypeRules(newRule(Page.class, PedidoResumoModel.class, PedidosResumoModelOpenApi.class))
 				.alternateTypeRules(newRule(List.class, RestauranteModel.class, RestauranteBasicoModelOpenApi.class));
 	}	
