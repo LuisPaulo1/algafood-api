@@ -1,15 +1,15 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.GenericInputDisassembler;
-import com.algaworks.algafood.api.assembler.GenericModelAssembler;
+import com.algaworks.algafood.api.assembler.PedidoModelAssembler;
+import com.algaworks.algafood.api.assembler.PedidoResumoModelAssembler;
 import com.algaworks.algafood.api.model.PedidoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.input.PedidoInput;
@@ -40,27 +41,29 @@ public class PedidoController implements PedidoControllerOpenApi {
 	private EmissaoPedidoService emisaoPedidoService;
 	
 	@Autowired
-	private GenericModelAssembler<PedidoModel, Pedido> pedidoModelAssembler;
-	
-	@Autowired
-	private GenericModelAssembler<PedidoResumoModel, Pedido> pedidoResumoModelAssembler;
-	
-	@Autowired
 	private GenericInputDisassembler<PedidoInput, Pedido> pedidoInputDisassembler;	
 	
+	@Autowired
+	private PedidoModelAssembler pedidoModelAssembler;
+	
+	@Autowired
+	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+	
+	@Autowired
+	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
+	
 	@GetMapping
-	public ResponseEntity<Page<PedidoResumoModel>> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable){	
+	public ResponseEntity<PagedModel<PedidoResumoModel>> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable){	
 		pageable = traduzirPageable(pageable);		
-		Page<Pedido> pedidosPage = emisaoPedidoService.pesquisar(filtro, pageable);		
-		List<PedidoResumoModel> pedidosResumoModel = pedidoResumoModelAssembler.toCollectionModel(pedidosPage.getContent(), PedidoResumoModel.class);
-		Page<PedidoResumoModel> pedidosResumoModelPage = new PageImpl<>(pedidosResumoModel, pageable, pedidosPage.getTotalElements());	
-		return ResponseEntity.ok(pedidosResumoModelPage);
+		Page<Pedido> pedidosPage = emisaoPedidoService.pesquisar(filtro, pageable);			
+		PagedModel<PedidoResumoModel> pedidosResumoPagedModel = pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);		
+		return ResponseEntity.ok(pedidosResumoPagedModel);
 	}
 	
 	@GetMapping(value = "/{codigo}")
 	public ResponseEntity<PedidoModel> buscar(@PathVariable String codigo){
 		Pedido pedido = emisaoPedidoService.buscar(codigo);
-		PedidoModel pedidoModel = pedidoModelAssembler.toModel(pedido, PedidoModel.class);
+		PedidoModel pedidoModel = pedidoModelAssembler.toModel(pedido);
 		return ResponseEntity.ok(pedidoModel);
 	}
 	
@@ -74,7 +77,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 		
 		novoPedido = emisaoPedidoService.emitir(novoPedido);
 		
-		PedidoModel pedidoModel = pedidoModelAssembler.toModel(novoPedido, PedidoModel.class);
+		PedidoModel pedidoModel = pedidoModelAssembler.toModel(novoPedido);
 		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoModel);
 	}
 	

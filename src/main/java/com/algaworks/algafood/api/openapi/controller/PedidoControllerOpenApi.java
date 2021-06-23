@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 
 import com.algaworks.algafood.api.exception.Problem;
@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiResponses;
 public interface PedidoControllerOpenApi {
    
     @ApiOperation("Pesquisa os pedidos")
-    ResponseEntity<Page<PedidoResumoModel>> pesquisar(PedidoFilter filtro, Pageable pageable);
+    ResponseEntity<PagedModel<PedidoResumoModel>> pesquisar(PedidoFilter filtro, Pageable pageable);
     
     @ApiOperation("Busca um pedido por código")
     @ApiResponses({
