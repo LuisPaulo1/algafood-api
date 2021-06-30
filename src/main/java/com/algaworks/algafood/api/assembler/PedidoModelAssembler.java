@@ -37,13 +37,20 @@ public class PedidoModelAssembler
 	public PedidoModel toModel(Pedido pedido) {
  		PedidoModel pedidoModel = createModelWithId(pedido.getCodigo(), pedido);		
 		modelMapper.map(pedido, pedidoModel);		
+		
+		TemplateVariables filtroVariables = new TemplateVariables(
+				new TemplateVariable("clienteId", VariableType.REQUEST_PARAM),
+				new TemplateVariable("restauranteId", VariableType.REQUEST_PARAM),
+				new TemplateVariable("dataCriacaoInicio", VariableType.REQUEST_PARAM),
+				new TemplateVariable("dataCriacaoFim", VariableType.REQUEST_PARAM));				
 
 		TemplateVariables pageVariables = new TemplateVariables(
 				new TemplateVariable("page", VariableType.REQUEST_PARAM),
 				new TemplateVariable("size", VariableType.REQUEST_PARAM),
-				new TemplateVariable("sort", VariableType.REQUEST_PARAM));		
+				new TemplateVariable("sort", VariableType.REQUEST_PARAM));
+		
 		String pedidosUrl = linkTo(PedidoController.class).toUri().toString();		
-		pedidoModel.add( Link.of(UriTemplate.of(pedidosUrl, pageVariables), "pedidos"));	
+		pedidoModel.add(Link.of(UriTemplate.of(pedidosUrl, pageVariables.concat(filtroVariables)), "pedidos"));	
 		
 		pedidoModel.getRestaurante().add(linkTo(methodOn(RestauranteController.class).buscar(pedidoModel.getRestaurante().getId())).withSelfRel());
 		pedidoModel.getCliente().add(linkTo(methodOn(UsuarioController.class).buscar(pedidoModel.getCliente().getId())).withSelfRel());
