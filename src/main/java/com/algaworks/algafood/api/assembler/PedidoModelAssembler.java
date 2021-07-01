@@ -30,6 +30,9 @@ public class PedidoModelAssembler
 		modelMapper.map(pedido, pedidoModel);		
 		
 		pedidoModel.add(algaLinks.linkToPedidos());		
+		pedidoModel.add(algaLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));		
+		pedidoModel.add(algaLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));		
+		pedidoModel.add(algaLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));		
 		pedidoModel.getRestaurante().add(algaLinks.linkToRestaurante(pedidoModel.getRestaurante().getId()));		
 		pedidoModel.getCliente().add(algaLinks.linkToUsuario(pedidoModel.getCliente().getId()));		
 		pedidoModel.getFormaPagamento().add(algaLinks.linkToFormaPagamento(pedidoModel.getFormaPagamento().getId()));		
