@@ -1,8 +1,5 @@
 package com.algaworks.algafood.api.controller;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.assembler.UsuarioModelAssembler;
 import com.algaworks.algafood.api.model.UsuarioModel;
 import com.algaworks.algafood.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
@@ -30,11 +28,14 @@ public class RestauranteUsuarioController implements RestauranteUsuarioResponsav
 	@Autowired
     private UsuarioModelAssembler usuarioModelAssembler;
 	
+	@Autowired
+	private AlgaLinks algaLinks;
+	
 	@GetMapping
 	public ResponseEntity<CollectionModel<UsuarioModel>> listar(@PathVariable Long restauranteId){
 		Restaurante restaurante = cadastroRestauranteService.buscar(restauranteId);
 		CollectionModel<UsuarioModel> responsaveis = usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis());		
-		responsaveis.removeLinks().add(linkTo(methodOn(RestauranteUsuarioController.class).listar(restauranteId)).withSelfRel());
+		responsaveis.removeLinks().add(algaLinks.linkToResponsaveisRestaurante(restauranteId));
 		return ResponseEntity.ok(responsaveis);
 	}
 	
