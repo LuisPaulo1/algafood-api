@@ -1,10 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.GenericInputDisassembler;
-import com.algaworks.algafood.api.assembler.GenericModelAssembler;
+import com.algaworks.algafood.api.assembler.GrupoModelAssembler;
 import com.algaworks.algafood.api.model.GrupoModel;
 import com.algaworks.algafood.api.model.input.GrupoInput;
 import com.algaworks.algafood.api.openapi.controller.GrupoControllerOpenApi;
@@ -36,24 +35,24 @@ public class GrupoController implements GrupoControllerOpenApi {
 	private GenericInputDisassembler<GrupoInput, Grupo> grupoInputDisassembler;
 	
 	@Autowired
-	private GenericModelAssembler<GrupoModel, Grupo> grupoModelAssembler;
-	
+	private GrupoModelAssembler grupoModelAssembler;
+			
 	@GetMapping
-	public ResponseEntity<List<GrupoModel>> listar() {
-		List<GrupoModel> grupos = grupoModelAssembler.toCollectionModel(cadastroGrupo.listar(), GrupoModel.class);				
+	public ResponseEntity<CollectionModel<GrupoModel>> listar() {
+		CollectionModel<GrupoModel> grupos = grupoModelAssembler.toCollectionModel(cadastroGrupo.listar());				
 		return ResponseEntity.ok(grupos);
 	}
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<GrupoModel> buscar(@PathVariable Long id) {		
-		GrupoModel grupo = grupoModelAssembler.toModel(cadastroGrupo.buscar(id), GrupoModel.class);
+		GrupoModel grupo = grupoModelAssembler.toModel(cadastroGrupo.buscar(id));
 		return ResponseEntity.ok(grupo);		
 	}
 
 	@PostMapping
 	public ResponseEntity<GrupoModel> adicionar(@RequestBody @Valid GrupoInput grupoInput) {		
 		Grupo grupo = grupoInputDisassembler.toDomainObject(grupoInput, Grupo.class);		
-		GrupoModel grupoModel = grupoModelAssembler.toModel(cadastroGrupo.salvar(grupo), GrupoModel.class);		
+		GrupoModel grupoModel = grupoModelAssembler.toModel(cadastroGrupo.salvar(grupo));		
 		return ResponseEntity.status(HttpStatus.CREATED).body(grupoModel);
 	}
 
@@ -61,7 +60,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	public ResponseEntity<GrupoModel> atualizar(@PathVariable Long id, @RequestBody @Valid GrupoInput grupoInput) {		
 		Grupo grupoAtual = cadastroGrupo.buscar(id);		
 		grupoInputDisassembler.copyToDomainObject(grupoInput, grupoAtual);		
-		GrupoModel grupoModel = grupoModelAssembler.toModel(cadastroGrupo.salvar(grupoAtual), GrupoModel.class);		
+		GrupoModel grupoModel = grupoModelAssembler.toModel(cadastroGrupo.salvar(grupoAtual));		
 		return ResponseEntity.ok(grupoModel);		
 	}
 
