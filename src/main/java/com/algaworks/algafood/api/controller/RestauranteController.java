@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.assembler.RestauranteBasicoModelAssembler;
 import com.algaworks.algafood.api.assembler.RestauranteInputDisassembler;
 import com.algaworks.algafood.api.assembler.RestauranteModelAssembler;
+import com.algaworks.algafood.api.model.RestauranteBasicoModel;
 import com.algaworks.algafood.api.model.RestauranteModel;
 import com.algaworks.algafood.api.model.input.RestauranteInput;
 import com.algaworks.algafood.api.openapi.controller.RestauranteControllerOpenApi;
@@ -38,12 +41,15 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Autowired
 	private RestauranteModelAssembler restauranteModelAssembler; 
 	
+	@Autowired
+	private RestauranteBasicoModelAssembler restauranteBasicoModelAssembler;  
+	
 	@Autowired	
 	private RestauranteInputDisassembler restauranteInputDisassembler;
 	
 	@GetMapping
-	public ResponseEntity<List<RestauranteModel>> listar() {
-		List<RestauranteModel> restaurantes = restauranteModelAssembler.toCollectionModel(cadastroRestaurante.listar());		
+	public ResponseEntity<CollectionModel<RestauranteBasicoModel>> listar() {
+		CollectionModel<RestauranteBasicoModel> restaurantes = restauranteBasicoModelAssembler.toCollectionModel(cadastroRestaurante.listar());		
 		return ResponseEntity.ok(restaurantes);
 	}
 
