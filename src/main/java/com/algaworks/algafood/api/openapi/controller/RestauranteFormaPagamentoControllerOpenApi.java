@@ -1,7 +1,6 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
-
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 
 import com.algaworks.algafood.api.exception.Problem;
@@ -20,7 +19,7 @@ public interface RestauranteFormaPagamentoControllerOpenApi {
     @ApiResponses({
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    ResponseEntity<List<FormaPagamentoModel>> listar(@ApiParam(value = "ID do restaurante") Long restauranteId);
+    ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(@ApiParam(value = "ID do restaurante") Long restauranteId);
 
     @ApiOperation("Desassociação de restaurante com forma de pagamento")
     @ApiResponses({
