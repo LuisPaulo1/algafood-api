@@ -36,9 +36,11 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@GetMapping
 	public ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroRestaurante.buscar(restauranteId);
-		CollectionModel<FormaPagamentoModel> formasPagamento = formaPagamentoModelAssembler.toCollectionModel(restaurante.getFormasPagamento())
+		CollectionModel<FormaPagamentoModel> formasPagamentoModel = formaPagamentoModelAssembler.toCollectionModel(restaurante.getFormasPagamento())
 				.removeLinks().add(algaLinks.linkToRestauranteFormasPagamento(restauranteId));
-		return ResponseEntity.ok(formasPagamento);
+		formasPagamentoModel.getContent().forEach(formaPagamento -> 
+				formaPagamento.add(algaLinks.linkToRestauranteFormasPagamentoDesassociar(restauranteId, formaPagamento.getId(), "desassociar")));		
+		return ResponseEntity.ok(formasPagamentoModel);
 	}
 	
 	@DeleteMapping("/{formaPagamentoId}")	
