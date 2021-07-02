@@ -52,11 +52,16 @@ public class RestauranteModelAssembler
 					algaLinks.linkToRestauranteFechamento(restauranteModel.getId(), "fechar"));
 		}
 		
+		restauranteModel.add(algaLinks.linkToProdutos(restaurante.getId(), "produtos"));
+		
         restauranteModel.getCozinha().add(
                 algaLinks.linkToCozinha(restauranteModel.getCozinha().getId()));
         
-        restauranteModel.getEndereco().getCidade().add(
-                algaLinks.linkToCidade(restauranteModel.getEndereco().getCidade().getId()));
+        if (restauranteModel.getEndereco() != null 
+                && restauranteModel.getEndereco().getCidade() != null) {
+            restauranteModel.getEndereco().getCidade().add(
+                    algaLinks.linkToCidade(restaurante.getEndereco().getCidade().getId()));
+        }
         
         restauranteModel.add(algaLinks.linkToRestauranteFormasPagamento(restauranteModel.getId(), 
                 "formas-pagamento"));

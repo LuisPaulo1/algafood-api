@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.assembler.GenericInputDisassembler;
-import com.algaworks.algafood.api.assembler.GenericModelAssembler;
+import com.algaworks.algafood.api.assembler.ProdutoModelAssembler;
 import com.algaworks.algafood.api.model.ProdutoModel;
 import com.algaworks.algafood.api.model.input.ProdutoInput;
 import com.algaworks.algafood.api.openapi.controller.RestauranteProdutoControllerOpenApi;
@@ -39,14 +41,17 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 	private CadastroProdutoService cadastroProdutoService;
 	
 	@Autowired
-	private GenericModelAssembler<ProdutoModel, Produto> produtoModelAssembler;
+	private ProdutoModelAssembler produtoModelAssembler;
 	
 	@Autowired
 	private GenericInputDisassembler<ProdutoInput, Produto> produtoInputDisassembler;
 	
+	@Autowired
+	private AlgaLinks algaLinks;
+	
 	@GetMapping
-	public ResponseEntity<List<ProdutoModel>> listar(@PathVariable Long restauranteId, 
-			@RequestParam(name = "incluirInativos", required = false) boolean incluirInativos){
+	public ResponseEntity<CollectionModel<ProdutoModel>> listar(@PathVariable Long restauranteId, 
+			@RequestParam(name = "incluirInativos", required = false) Boolean incluirInativos){
 		Restaurante restaurante = cadastroRestauranteService.buscar(restauranteId);	
 		
 		List<Produto> produtos = null;
@@ -56,14 +61,15 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		else
 			produtos = cadastroProdutoService.buscarAtivosPorRestaurante(restaurante);
 		
-		List<ProdutoModel> produtosModel = produtoModelAssembler.toCollectionModel(produtos, ProdutoModel.class);
+		CollectionModel<ProdutoModel> produtosModel = produtoModelAssembler.toCollectionModel(produtos);
+		produtosModel.add(algaLinks.linkToProdutos(restauranteId));
 		return ResponseEntity.ok(produtosModel);
 	}
 	
 	@GetMapping("/{produtoId}")
 	public ResponseEntity<ProdutoModel> buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId){
 		Produto produto = cadastroProdutoService.buscar(restauranteId, produtoId);		
-		ProdutoModel produtoModel = produtoModelAssembler.toModel(produto, ProdutoModel.class);		
+		ProdutoModel produtoModel = produtoModelAssembler.toModel(produto);		
 		return ResponseEntity.ok(produtoModel);
  	}
 	
@@ -73,7 +79,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		Produto produto = produtoInputDisassembler.toDomainObject(produtoInput, Produto.class);
 		produto.setRestaurante(restaurante);		
 		produto = cadastroProdutoService.salvar(produto);		
-		ProdutoModel produtoModel = produtoModelAssembler.toModel(produto, ProdutoModel.class);		
+		ProdutoModel produtoModel = produtoModelAssembler.toModel(produto);		
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtoModel); 		
 	}
 	
@@ -82,7 +88,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		Produto produtoAtual = cadastroProdutoService.buscar(restauranteId, produtoId);		
 		produtoInputDisassembler.copyToDomainObject(produtoInput, produtoAtual);		
 		produtoAtual = cadastroProdutoService.salvar(produtoAtual);		
-		ProdutoModel produtoModel = produtoModelAssembler.toModel(produtoAtual, ProdutoModel.class);		
+		ProdutoModel produtoModel = produtoModelAssembler.toModel(produtoAtual);		
 		return ResponseEntity.ok(produtoModel);
 	}
 	
