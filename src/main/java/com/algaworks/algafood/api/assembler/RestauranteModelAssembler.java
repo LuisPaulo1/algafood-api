@@ -34,35 +34,34 @@ public class RestauranteModelAssembler
         
         if (restaurante.ativacaoPermitida()) {
 			restauranteModel.add(
-					algaLinks.linkToRestauranteAtivacao(restaurante.getId(), "ativar"));
+					algaLinks.linkToRestauranteAtivacao(restauranteModel.getId(), "ativar"));
 		}
 
 		if (restaurante.inativacaoPermitida()) {
 			restauranteModel.add(
-					algaLinks.linkToRestauranteInativacao(restaurante.getId(), "inativar"));
+					algaLinks.linkToRestauranteInativacao(restauranteModel.getId(), "inativar"));
 		}
 
 		if (restaurante.aberturaPermitida()) {
 			restauranteModel.add(
-					algaLinks.linkToRestauranteAbertura(restaurante.getId(), "abrir"));
+					algaLinks.linkToRestauranteAbertura(restauranteModel.getId(), "abrir"));
 		}
 
 		if (restaurante.fechamentoPermitido()) {
 			restauranteModel.add(
-					algaLinks.linkToRestauranteFechamento(restaurante.getId(), "fechar"));
-		}        
-        
+					algaLinks.linkToRestauranteFechamento(restauranteModel.getId(), "fechar"));
+		}
+		
         restauranteModel.getCozinha().add(
-                algaLinks.linkToCozinha(restaurante.getCozinha().getId()));
+                algaLinks.linkToCozinha(restauranteModel.getCozinha().getId()));
         
         restauranteModel.getEndereco().getCidade().add(
-                algaLinks.linkToCidade(restaurante.getEndereco().getCidade().getId()));
+                algaLinks.linkToCidade(restauranteModel.getEndereco().getCidade().getId()));
         
-        restauranteModel.add(algaLinks.linkToRestauranteFormasPagamento(restaurante.getId(), 
+        restauranteModel.add(algaLinks.linkToRestauranteFormasPagamento(restauranteModel.getId(), 
                 "formas-pagamento"));
         
-        restauranteModel.add(algaLinks.linkToResponsaveisRestaurante(restaurante.getId(), 
-                "responsaveis"));
+        restauranteModel.add(algaLinks.linkToResponsaveisRestaurante(restauranteModel.getId(), "responsaveis"));
         
         return restauranteModel;
     }
