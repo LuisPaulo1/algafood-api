@@ -9,7 +9,6 @@ import com.algaworks.algafood.api.exception.Problem;
 import com.algaworks.algafood.api.model.RestauranteBasicoModel;
 import com.algaworks.algafood.api.model.RestauranteModel;
 import com.algaworks.algafood.api.model.input.RestauranteInput;
-import com.algaworks.algafood.api.openapi.model.RestauranteBasicoModelOpenApi;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +19,7 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Restaurantes")
 public interface RestauranteControllerOpenApi {
 
-    @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)   
+    @ApiOperation(value = "Lista restaurantes")   
     ResponseEntity<CollectionModel<RestauranteBasicoModel>> listar();   
     
     @ApiOperation("Busca um restaurante por ID")

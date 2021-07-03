@@ -28,7 +28,9 @@ import com.algaworks.algafood.api.model.GrupoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.PermissaoModel;
 import com.algaworks.algafood.api.model.ProdutoModel;
+import com.algaworks.algafood.api.model.RestauranteBasicoModel;
 import com.algaworks.algafood.api.model.RestauranteModel;
+import com.algaworks.algafood.api.model.UsuarioModel;
 import com.algaworks.algafood.api.openapi.model.CidadesModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.EstadosModelOpenApi;
@@ -40,6 +42,8 @@ import com.algaworks.algafood.api.openapi.model.PedidosResumoModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PermissoesModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.ProdutosModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.RestauranteBasicoModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.RestaurantesBasicoModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.UsuariosModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -89,7 +93,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.alternateTypeRules(newRule(CollectionModel.class, GrupoModel.class, GruposModelOpenApi.class))
 				.alternateTypeRules(newRule(CollectionModel.class, PermissaoModel.class, PermissoesModelOpenApi.class))
 				.alternateTypeRules(newRule(PagedModel.class, PedidoResumoModel.class, PedidosResumoModelOpenApi.class))
-				.alternateTypeRules(newRule(CollectionModel.class, ProdutoModel.class, ProdutosModelOpenApi.class));
+				.alternateTypeRules(newRule(CollectionModel.class, ProdutoModel.class, ProdutosModelOpenApi.class))
+				.alternateTypeRules(newRule(CollectionModel.class, RestauranteBasicoModel.class, RestaurantesBasicoModelOpenApi.class))
+				.alternateTypeRules(newRule(CollectionModel.class, UsuarioModel.class, UsuariosModelOpenApi.class));
 	}		
 	
 	private <T, M, K> AlternateTypeRule newRule(Class<T> returnType, Class<M> modelObject, Class<K> modelObjectOpenApi) {
