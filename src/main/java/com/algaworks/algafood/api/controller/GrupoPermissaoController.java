@@ -1,8 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,11 +11,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.GenericModelAssembler;
+import com.algaworks.algafood.api.AlgaLinks;
+import com.algaworks.algafood.api.assembler.PermissaoModelAssembler;
 import com.algaworks.algafood.api.model.PermissaoModel;
 import com.algaworks.algafood.api.openapi.controller.GrupoPermissaoControllerOpenApi;
 import com.algaworks.algafood.domain.model.Grupo;
-import com.algaworks.algafood.domain.model.Permissao;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
 
 @RestController
@@ -24,16 +23,29 @@ import com.algaworks.algafood.domain.service.CadastroGrupoService;
 public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi {
 	
 	@Autowired
+	private AlgaLinks algaLinks;
+	
+	@Autowired
 	private CadastroGrupoService cadastroGrupoService;
 	
 	@Autowired
-	private GenericModelAssembler<PermissaoModel, Permissao> permissaoModelAssembler; 
-	
+	private PermissaoModelAssembler permissaoModelAssembler;
+		
 	@GetMapping
-	public ResponseEntity<List<PermissaoModel>> listar(@PathVariable Long grupoId){
+	public ResponseEntity<CollectionModel<PermissaoModel>> listar(@PathVariable Long grupoId){
 		Grupo grupo = cadastroGrupoService.buscar(grupoId);		
-		List<PermissaoModel> permissoes = permissaoModelAssembler.toCollectionModel(grupo.getPermissoes(), PermissaoModel.class);
-		return ResponseEntity.ok(permissoes);
+		
+		CollectionModel<PermissaoModel> permissoesModel = permissaoModelAssembler.toCollectionModel(grupo.getPermissoes())
+            .removeLinks()
+            .add(algaLinks.linkToGrupoPermissoes(grupoId))
+            .add(algaLinks.linkToGrupoPermissaoAssociacao(grupoId, "associar"));
+		
+		permissoesModel.getContent().forEach(permissaoModel -> {
+	        permissaoModel.add(algaLinks.linkToGrupoPermissaoDesassociacao(
+	                grupoId, permissaoModel.getId(), "desassociar"));
+	    });
+		
+		return ResponseEntity.ok(permissoesModel);
 	}
 	
 	@PutMapping(value = "/{permissaoId}")
