@@ -85,7 +85,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.alternateTypeRules(newRule(CollectionModel.class, EstadoModel.class, EstadosModelOpenApi.class))
 				.alternateTypeRules(newRule(CollectionModel.class, FormaPagamentoModel.class, FormasPagamentoModelOpenApi.class))
 				.alternateTypeRules(newRule(CollectionModel.class, GrupoModel.class, GruposModelOpenApi.class))
-				.alternateTypeRules(newRule(CollectionModel.class, PermissaoModel.class, PermissoesModelOpenApi.class));
+				.alternateTypeRules(newRule(CollectionModel.class, PermissaoModel.class, PermissoesModelOpenApi.class))
+				.alternateTypeRules(newRule(PagedModel.class, PedidoResumoModel.class, PedidosResumoModelOpenApi.class));
 	}		
 	
 	private <T, M, K> AlternateTypeRule newRule(Class<T> returnType, Class<M> modelObject, Class<K> modelObjectOpenApi) {
