@@ -27,6 +27,7 @@ import com.algaworks.algafood.api.model.FormaPagamentoModel;
 import com.algaworks.algafood.api.model.GrupoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.PermissaoModel;
+import com.algaworks.algafood.api.model.ProdutoModel;
 import com.algaworks.algafood.api.model.RestauranteModel;
 import com.algaworks.algafood.api.openapi.model.CidadesModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
@@ -37,6 +38,7 @@ import com.algaworks.algafood.api.openapi.model.LinksModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PedidosResumoModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PermissoesModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.ProdutosModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.RestauranteBasicoModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
@@ -86,7 +88,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.alternateTypeRules(newRule(CollectionModel.class, FormaPagamentoModel.class, FormasPagamentoModelOpenApi.class))
 				.alternateTypeRules(newRule(CollectionModel.class, GrupoModel.class, GruposModelOpenApi.class))
 				.alternateTypeRules(newRule(CollectionModel.class, PermissaoModel.class, PermissoesModelOpenApi.class))
-				.alternateTypeRules(newRule(PagedModel.class, PedidoResumoModel.class, PedidosResumoModelOpenApi.class));
+				.alternateTypeRules(newRule(PagedModel.class, PedidoResumoModel.class, PedidosResumoModelOpenApi.class))
+				.alternateTypeRules(newRule(CollectionModel.class, ProdutoModel.class, ProdutosModelOpenApi.class));
 	}		
 	
 	private <T, M, K> AlternateTypeRule newRule(Class<T> returnType, Class<M> modelObject, Class<K> modelObjectOpenApi) {
