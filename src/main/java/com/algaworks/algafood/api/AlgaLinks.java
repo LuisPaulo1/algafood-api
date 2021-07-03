@@ -37,6 +37,7 @@ public class AlgaLinks {
 			new TemplateVariable("size", VariableType.REQUEST_PARAM),
 			new TemplateVariable("sort", VariableType.REQUEST_PARAM));
 
+	//Pedidos
 	public Link linkToPedidos(String rel) {
 		TemplateVariables filtroVariables = new TemplateVariables(
 				new TemplateVariable("clienteId", VariableType.REQUEST_PARAM),
