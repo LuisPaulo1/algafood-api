@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
+	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**").allowedMethods("*");
@@ -19,6 +19,6 @@ public class WebConfig implements WebMvcConfigurer {
 	@Bean
 	public Filter shallowEtagHeaderFilter() {
 		return new ShallowEtagHeaderFilter();
-	}
-
+	}	
+	
 }

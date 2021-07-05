@@ -42,8 +42,8 @@ public class CidadeController implements CidadeControllerOpenApi {
 	
 	@Autowired
 	private CidadeModelAssembler cidadeModelAssembler;
-		
-	@GetMapping
+	
+	@GetMapping	
 	public ResponseEntity<CollectionModel<CidadeModel>> listar() {		
 		List<Cidade> todasCidades = cadastroCidade.listar();		
 		CollectionModel<CidadeModel> cidadesModel = cidadeModelAssembler.toCollectionModel(todasCidades);
