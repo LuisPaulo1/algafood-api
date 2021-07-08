@@ -20,7 +20,7 @@
 		<jasperreports.version>6.17.0</jasperreports.version>
 		<aws-java-sdk-s3.version>1.11.1034</aws-java-sdk-s3.version>
 		<springfox.version>3.0.0</springfox.version>
-		<logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>		
+		<logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -29,9 +29,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>			 
 		</dependency>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -122,6 +121,14 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+  			<groupId>com.nimbusds</groupId>
+ 		 	<artifactId>oauth2-oidc-sdk</artifactId>
 		</dependency>
 	</dependencies>
 	
