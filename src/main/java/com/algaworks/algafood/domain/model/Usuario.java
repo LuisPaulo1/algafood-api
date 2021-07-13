@@ -46,10 +46,10 @@ public class Usuario {
 		joinColumns = @JoinColumn(name="usuario_id"),
 		inverseJoinColumns = @JoinColumn(name="grupo_id")
 	)
-	private Set<Grupo> grupos = new HashSet<>();
+	private Set<Grupo> grupos = new HashSet<>();	
 	
-	public boolean validarSenha(String senha) {
-		return this.getSenha().equals(senha.trim());
+	public boolean isNovo() {
+	    return getId() == null;
 	}
 	
 	public void adicionarGrupo(Grupo grupo) {
