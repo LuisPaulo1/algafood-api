@@ -25,6 +25,7 @@ import com.algaworks.algafood.api.v1.assembler.ProdutoModelAssembler;
 import com.algaworks.algafood.api.v1.model.ProdutoModel;
 import com.algaworks.algafood.api.v1.model.input.ProdutoInput;
 import com.algaworks.algafood.api.v1.openapi.controller.RestauranteProdutoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
@@ -49,6 +50,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 	@Autowired
 	private AlgaLinks algaLinks;
 	
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping
 	public ResponseEntity<CollectionModel<ProdutoModel>> listar(@PathVariable Long restauranteId, 
 			@RequestParam(name = "incluirInativos", required = false) Boolean incluirInativos){
@@ -66,6 +68,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return ResponseEntity.ok(produtosModel);
 	}
 	
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping("/{produtoId}")
 	public ResponseEntity<ProdutoModel> buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId){
 		Produto produto = cadastroProdutoService.buscar(restauranteId, produtoId);		
@@ -73,6 +76,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return ResponseEntity.ok(produtoModel);
  	}
 	
+	@CheckSecurity.Restaurantes.PodeEditar
 	@PostMapping
 	public ResponseEntity<ProdutoModel> adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
 		Restaurante restaurante = cadastroRestauranteService.buscar(restauranteId);		
@@ -83,6 +87,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtoModel); 		
 	}
 	
+	@CheckSecurity.Restaurantes.PodeEditar
 	@PutMapping("/{produtoId}")
 	public ResponseEntity<ProdutoModel> atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInput produtoInput){
 		Produto produtoAtual = cadastroProdutoService.buscar(restauranteId, produtoId);		
@@ -92,6 +97,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return ResponseEntity.ok(produtoModel);
 	}
 	
+	@CheckSecurity.Restaurantes.PodeEditar
 	@DeleteMapping("/{produtoId}")
 	public ResponseEntity<Void> remover(@PathVariable Long produtoId){		
 		Produto produto = cadastroProdutoService.buscar(produtoId);

@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.v1.openapi.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.hateoas.CollectionModel;
@@ -28,6 +29,18 @@ public interface RestauranteControllerOpenApi {
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
     ResponseEntity<RestauranteModel> buscar(@ApiParam(value = "ID de um restaurante") Long restauranteId);
+    
+    @ApiOperation(value = "Lista de restaurantes pelo nome", hidden = true)
+    ResponseEntity<List<RestauranteModel>> buscarPorNome(String nome, Long id);
+    
+    @ApiOperation(value = "Lista de restaurantes pelo nome e frete", hidden = true)
+    ResponseEntity<List<RestauranteModel>> buscarPorNomeFrete(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal);
+    
+    @ApiOperation(value = "Lista de restaurantes com frete grátis", hidden = true)
+    ResponseEntity<List<RestauranteModel>> buscarComFreteGratis(String nome);
+    
+    @ApiOperation(value = "Busca o primeiro restaurante", hidden = true)
+    ResponseEntity<RestauranteModel> buscarOPrimeiro();
     
     @ApiOperation("Cadastra um restaurante")
     @ApiResponses({
