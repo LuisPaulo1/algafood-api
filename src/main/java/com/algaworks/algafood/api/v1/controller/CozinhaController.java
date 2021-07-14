@@ -25,6 +25,7 @@ import com.algaworks.algafood.api.v1.assembler.GenericInputDisassembler;
 import com.algaworks.algafood.api.v1.model.CozinhaModel;
 import com.algaworks.algafood.api.v1.model.input.CozinhaInput;
 import com.algaworks.algafood.api.v1.openapi.controller.CozinhaControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
@@ -44,26 +45,30 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 	@Autowired
 	private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 	
+	@CheckSecurity.Cozinhas.PodeConsultar
 	@GetMapping
 	public ResponseEntity<PagedModel<CozinhaModel>> listar(@PageableDefault(size = 10) Pageable pageable) {
 		Page<Cozinha> cozinhasPage = cadastroCozinha.listar(pageable);		
 		PagedModel<CozinhaModel> cozinhasPagedModel = pagedResourcesAssembler.toModel(cozinhasPage, cozinhaModelAssembler);	
 		return ResponseEntity.ok(cozinhasPagedModel);	
 	}
-
+	
+	@CheckSecurity.Cozinhas.PodeConsultar
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<CozinhaModel> buscar(@PathVariable Long id) {		
 		CozinhaModel cozinha = cozinhaModelAssembler.toModel(cadastroCozinha.buscar(id));
 		return ResponseEntity.ok(cozinha);		
 	}
-
+	
+	@CheckSecurity.Cozinhas.PodeEditar
 	@PostMapping
 	public ResponseEntity<CozinhaModel> adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {		
 		Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput, Cozinha.class);		
 		CozinhaModel cozinhaModel = cozinhaModelAssembler.toModel(cadastroCozinha.salvar(cozinha));		
 		return ResponseEntity.status(HttpStatus.CREATED).body(cozinhaModel);
 	}
-
+	
+	@CheckSecurity.Cozinhas.PodeEditar
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<CozinhaModel> atualizar(@PathVariable Long id, @RequestBody @Valid CozinhaInput cozinhaInput) {		
 		Cozinha cozinhaAtual = cadastroCozinha.buscar(id);		
@@ -71,7 +76,8 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 		CozinhaModel cozinhaModel = cozinhaModelAssembler.toModel(cadastroCozinha.salvar(cozinhaAtual));		
 		return ResponseEntity.ok(cozinhaModel);		
 	}
-
+	
+	@CheckSecurity.Cozinhas.PodeEditar
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> remover(@PathVariable Long id) {		
 		cadastroCozinha.excluir(id);
