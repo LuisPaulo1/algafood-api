@@ -22,5 +22,8 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
 	
 	//@Query("from Restaurante where nome like %:nome% and cozinha.id = :id")
 	//A consulta tá no orm.xml
-	List<Restaurante> consultarPorNome(@Param("nome") String nome, @Param("id") Long id);	
+	List<Restaurante> consultarPorNome(@Param("nome") String nome, @Param("id") Long id);
+	
+	//A consulta tá no orm.xml
+	boolean existsResponsavel(Long restauranteId, Long usuarioId);
 }

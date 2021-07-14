@@ -51,7 +51,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 	@Autowired
 	private FotoProdutoModelAssembler fotoProdutoModelAssembler;		
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<FotoProdutoModel> atualizarFoto(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId, @Valid FotoProdutoInput fotoProdutoInput, 
@@ -109,7 +109,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		}
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@DeleteMapping
 	public ResponseEntity<Void> remover(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		catalogoFotoProdutoService.excluir(restauranteId, produtoId);

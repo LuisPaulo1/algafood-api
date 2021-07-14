@@ -76,7 +76,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return ResponseEntity.ok(produtoModel);
  	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@PostMapping
 	public ResponseEntity<ProdutoModel> adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
 		Restaurante restaurante = cadastroRestauranteService.buscar(restauranteId);		
@@ -87,7 +87,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtoModel); 		
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@PutMapping("/{produtoId}")
 	public ResponseEntity<ProdutoModel> atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInput produtoInput){
 		Produto produtoAtual = cadastroProdutoService.buscar(restauranteId, produtoId);		
@@ -97,7 +97,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return ResponseEntity.ok(produtoModel);
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@DeleteMapping("/{produtoId}")
 	public ResponseEntity<Void> remover(@PathVariable Long produtoId){		
 		Produto produto = cadastroProdutoService.buscar(produtoId);

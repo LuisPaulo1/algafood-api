@@ -89,7 +89,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	 	return ResponseEntity.ok(restaurante);
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@PostMapping
 	public ResponseEntity<RestauranteModel> adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {	
 		Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);		
@@ -97,7 +97,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		return ResponseEntity.status(HttpStatus.CREATED).body(restauranteModel);		
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<RestauranteModel> atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteInput restauranteInput) {	
 		Restaurante restauranteAtual = cadastroRestaurante.buscar(id);
@@ -106,49 +106,49 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 		return ResponseEntity.ok(restauranteModel);
 	}	
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@PutMapping(value = "/{id}/ativo")
 	public ResponseEntity<Void> ativar(@PathVariable Long id){
 		cadastroRestaurante.ativar(id);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@DeleteMapping(value = "/{id}/ativo")
 	public ResponseEntity<Void> inativar(@PathVariable Long id){
 		cadastroRestaurante.inativar(id);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@PutMapping(value = "/ativacoes")
 	public ResponseEntity<Void> ativarMultiplos(@RequestBody List<Long> restauranteIds){
 		cadastroRestaurante.ativar(restauranteIds);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@DeleteMapping(value = "/inativacoes")
 	public ResponseEntity<Void> inativarMultiplos(@RequestBody List<Long> restauranteIds){
 		cadastroRestaurante.inativar(restauranteIds);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
-	@PutMapping(value = "/{id}/abertura")
-	public ResponseEntity<Void> abrir(@PathVariable Long id){
-		cadastroRestaurante.abrirRestaurante(id);
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
+	@PutMapping(value = "/{restauranteId}/abertura")
+	public ResponseEntity<Void> abrir(@PathVariable Long restauranteId){
+		cadastroRestaurante.abrirRestaurante(restauranteId);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
-	@PutMapping(value = "/{id}/fechamento")
-	public ResponseEntity<Void> fechar(@PathVariable Long id){
-		cadastroRestaurante.fecharRestaurante(id);
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
+	@PutMapping(value = "/{restauranteId}/fechamento")
+	public ResponseEntity<Void> fechar(@PathVariable Long restauranteId){
+		cadastroRestaurante.fecharRestaurante(restauranteId);
 		return ResponseEntity.noContent().build();
 	}
 
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> remover(@PathVariable Long id) {		
 		cadastroRestaurante.excluir(id);
