@@ -23,6 +23,7 @@ import com.algaworks.algafood.api.v1.model.input.SenhaInput;
 import com.algaworks.algafood.api.v1.model.input.UsuarioComSenhaInput;
 import com.algaworks.algafood.api.v1.model.input.UsuarioInput;
 import com.algaworks.algafood.api.v1.openapi.controller.UsuarioControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 
@@ -39,18 +40,21 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 	@Autowired
     private UsuarioModelAssembler usuarioModelAssembler;
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping
 	public ResponseEntity<CollectionModel<UsuarioModel>> listar() {
 		CollectionModel<UsuarioModel> usuarios = usuarioModelAssembler.toCollectionModel(cadastroUsuario.listar());		
 		return ResponseEntity.ok(usuarios);
 	}
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioModel> buscar(@PathVariable Long id) {
 		UsuarioModel usuario = usuarioModelAssembler.toModel(cadastroUsuario.buscar(id));		
 		return ResponseEntity.ok(usuario);
 	}
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PostMapping
 	public ResponseEntity<UsuarioModel> adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioComSenhaInput) {
 		Usuario usuario = usuarioInputDisassembler.toDomainObject(usuarioComSenhaInput, Usuario.class);
@@ -58,6 +62,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioModel);
 	}
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PutMapping("/{id}")
 	public ResponseEntity<UsuarioModel> atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioInput atualizarUsuarioInput) {		
 		Usuario usuarioAtual = cadastroUsuario.buscar(id);
@@ -66,12 +71,14 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 		return ResponseEntity.ok(usuarioModel);		
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PutMapping("/{id}/senha")
 	public ResponseEntity<Void> atualizarSenha(@PathVariable Long id, @RequestBody @Valid SenhaInput senhaInput) {		
 		cadastroUsuario.alterarSenha(id, senhaInput.getSenhaAtual(), senhaInput.getNovaSenha());		
 		return ResponseEntity.noContent().build();		
 	}	
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> remover(@PathVariable Long id) {		
 		cadastroUsuario.excluir(id);

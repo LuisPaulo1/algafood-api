@@ -15,6 +15,7 @@ import com.algaworks.algafood.api.v1.AlgaLinks;
 import com.algaworks.algafood.api.v1.assembler.GrupoModelAssembler;
 import com.algaworks.algafood.api.v1.model.GrupoModel;
 import com.algaworks.algafood.api.v1.openapi.controller.UsuarioGrupoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 
@@ -30,7 +31,8 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 			
 	@Autowired
 	private AlgaLinks algaLinks;  
-
+	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping
 	public ResponseEntity<CollectionModel<GrupoModel>> listar(@PathVariable Long usuarioId){
 		Usuario usuario = cadastroUsuarioService.buscar(usuarioId);
@@ -48,12 +50,14 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 		return ResponseEntity.ok(gruposModel);		
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PutMapping(value = "/{grupoId}")
 	public ResponseEntity<Void> associarGrupo(@PathVariable Long usuarioId, @PathVariable Long grupoId){
 		cadastroUsuarioService.associarGrupo(usuarioId, grupoId);
 		return ResponseEntity.noContent().build();
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@DeleteMapping(value = "/{grupoId}")
 	public ResponseEntity<Void> desassociarGrupo(@PathVariable Long usuarioId, @PathVariable Long grupoId){
 		cadastroUsuarioService.desassociarGrupo(usuarioId, grupoId);

@@ -21,6 +21,7 @@ import com.algaworks.algafood.api.v1.assembler.GrupoModelAssembler;
 import com.algaworks.algafood.api.v1.model.GrupoModel;
 import com.algaworks.algafood.api.v1.model.input.GrupoInput;
 import com.algaworks.algafood.api.v1.openapi.controller.GrupoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
 
@@ -37,18 +38,21 @@ public class GrupoController implements GrupoControllerOpenApi {
 	@Autowired
 	private GrupoModelAssembler grupoModelAssembler;
 			
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping
 	public ResponseEntity<CollectionModel<GrupoModel>> listar() {
 		CollectionModel<GrupoModel> grupos = grupoModelAssembler.toCollectionModel(cadastroGrupo.listar());				
 		return ResponseEntity.ok(grupos);
 	}
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<GrupoModel> buscar(@PathVariable Long id) {		
 		GrupoModel grupo = grupoModelAssembler.toModel(cadastroGrupo.buscar(id));
 		return ResponseEntity.ok(grupo);		
 	}
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PostMapping
 	public ResponseEntity<GrupoModel> adicionar(@RequestBody @Valid GrupoInput grupoInput) {		
 		Grupo grupo = grupoInputDisassembler.toDomainObject(grupoInput, Grupo.class);		
@@ -56,6 +60,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return ResponseEntity.status(HttpStatus.CREATED).body(grupoModel);
 	}
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<GrupoModel> atualizar(@PathVariable Long id, @RequestBody @Valid GrupoInput grupoInput) {		
 		Grupo grupoAtual = cadastroGrupo.buscar(id);		
@@ -64,6 +69,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return ResponseEntity.ok(grupoModel);		
 	}
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> remover(@PathVariable Long id) {		
 		cadastroGrupo.excluir(id);
