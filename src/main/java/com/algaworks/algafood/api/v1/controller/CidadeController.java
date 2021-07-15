@@ -26,6 +26,7 @@ import com.algaworks.algafood.api.v1.assembler.GenericInputDisassembler;
 import com.algaworks.algafood.api.v1.model.CidadeModel;
 import com.algaworks.algafood.api.v1.model.input.CidadeInput;
 import com.algaworks.algafood.api.v1.openapi.controller.CidadeControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
@@ -43,6 +44,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 	@Autowired
 	private CidadeModelAssembler cidadeModelAssembler;
 	
+	@CheckSecurity.Cidades.PodeConsultar
 	@GetMapping	
 	public ResponseEntity<CollectionModel<CidadeModel>> listar() {		
 		List<Cidade> todasCidades = cadastroCidade.listar();		
@@ -52,12 +54,14 @@ public class CidadeController implements CidadeControllerOpenApi {
 				.body(cidadesModel);
 	}
 
+	@CheckSecurity.Cidades.PodeConsultar
 	@GetMapping("/{id}")
 	public ResponseEntity<CidadeModel> buscar(@PathVariable Long id) {		
 		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cadastroCidade.buscar(id));			
 		return ResponseEntity.ok(cidadeModel);		
 	}
 	
+	@CheckSecurity.Cidades.PodeEditar
 	@PostMapping
 	public ResponseEntity<CidadeModel> adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
 		Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput, Cidade.class);
@@ -65,7 +69,8 @@ public class CidadeController implements CidadeControllerOpenApi {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(cidadeModel.getId()).toUri();	
 		return ResponseEntity.created(uri).body(cidadeModel);				
 	}
-		
+	
+	@CheckSecurity.Cidades.PodeEditar
 	@PutMapping("/{id}")
 	public ResponseEntity<CidadeModel> atualizar(@PathVariable Long id, @RequestBody @Valid CidadeInput cidadeInput) {
 		Cidade cidadeAtual = cadastroCidade.buscar(id);		
@@ -75,7 +80,8 @@ public class CidadeController implements CidadeControllerOpenApi {
 		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidadeAtual);		
 		return ResponseEntity.ok(cidadeModel);		
 	}
-
+	
+	@CheckSecurity.Cidades.PodeEditar
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> remover(@PathVariable Long id) {		
 		cadastroCidade.excluir(id);

@@ -21,6 +21,7 @@ import com.algaworks.algafood.api.v1.assembler.GenericInputDisassembler;
 import com.algaworks.algafood.api.v1.model.EstadoModel;
 import com.algaworks.algafood.api.v1.model.input.EstadoInput;
 import com.algaworks.algafood.api.v1.openapi.controller.EstadoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.service.CadastroEstadoService;
 
@@ -37,18 +38,21 @@ public class EstadoController implements EstadoControllerOpenApi {
 	@Autowired
 	private EstadoModelAssembler estadoModelAssembler;
 
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping
 	public ResponseEntity<CollectionModel<EstadoModel>> listar() {
 		CollectionModel<EstadoModel> estados = estadoModelAssembler.toCollectionModel(cadastroEstado.listar());		
 		return ResponseEntity.ok(estados);
 	}
 
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping("/{id}")
 	public ResponseEntity<EstadoModel> buscar(@PathVariable Long id) {
 		EstadoModel estado = estadoModelAssembler.toModel(cadastroEstado.buscar(id));		
 		return ResponseEntity.ok(estado);
 	}
 
+	@CheckSecurity.Estados.PodeEditar
 	@PostMapping
 	public ResponseEntity<EstadoModel> adicionar(@RequestBody @Valid EstadoInput estadoInput) {
 		Estado estado = estadoInputDisassembler.toDomainObject(estadoInput, Estado.class);
@@ -56,6 +60,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		return ResponseEntity.status(HttpStatus.CREATED).body(estadoModel);
 	}
 
+	@CheckSecurity.Estados.PodeEditar
 	@PutMapping("/{id}")
 	public ResponseEntity<EstadoModel> atualizar(@PathVariable Long id, @RequestBody @Valid EstadoInput estadoInput) {		
 		Estado estadoAtual = cadastroEstado.buscar(id);
@@ -64,6 +69,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		return ResponseEntity.ok(estadoModel);		
 	}
 
+	@CheckSecurity.Estados.PodeEditar
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> remover(@PathVariable Long id) {		
 		cadastroEstado.excluir(id);
