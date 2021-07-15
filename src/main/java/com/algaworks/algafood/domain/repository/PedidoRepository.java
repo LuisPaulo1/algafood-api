@@ -17,5 +17,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long>, JpaSpecif
 	
 	@Query("from Pedido p join fetch p.cliente join fetch p.restaurante r join fetch r.cozinha join fetch p.itens i join fetch i.produto")
 	List<Pedido> findAll();
+	
+	//consulta tá no orm.xml
+	boolean isPedidoGerenciadoPor(String codigoPedido, Long usuarioId);
 
 }

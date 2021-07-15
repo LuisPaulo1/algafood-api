@@ -76,6 +76,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 		return ResponseEntity.ok(pedidoModel);
 	}
 	
+	@CheckSecurity.Pedidos.PodeCriar
 	@PostMapping
 	public ResponseEntity<PedidoModel> adicionar(@RequestBody @Valid PedidoInput pedidoInput) {
 		Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput, Pedido.class);
