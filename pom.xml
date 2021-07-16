@@ -21,6 +21,8 @@
 		<aws-java-sdk-s3.version>1.11.1034</aws-java-sdk-s3.version>
 		<springfox.version>3.0.0</springfox.version>
 		<logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
+		<spring-security-oauth2.version>2.3.7.RELEASE</spring-security-oauth2.version>
+		<spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -130,6 +132,16 @@
   			<groupId>com.nimbusds</groupId>
  		 	<artifactId>oauth2-oidc-sdk</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>org.springframework.security.oauth</groupId>
+		    <artifactId>spring-security-oauth2</artifactId>
+		    <version>${spring-security-oauth2.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-jwt</artifactId>
+		    <version>${spring-security-jwt.version}</version>
+		</dependency>		
 	</dependencies>
 	
 	<build>
