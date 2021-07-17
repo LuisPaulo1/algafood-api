@@ -76,8 +76,6 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 	@Bean
 	public Docket apiDocketV1() {
 		
-		authenticationScheme();
-		
 		var typeResolver = new TypeResolver();
 		
 		return new Docket(DocumentationType.OAS_30)
@@ -116,8 +114,6 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 	
 	@Bean
 	public Docket apiDocketV2() {
-		
-		authenticationScheme();
 		
 		var typeResolver = new TypeResolver();
 		
@@ -165,8 +161,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 	        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
 	        authorizationScopes[0] = authorizationScope;
 	        return List.of(new SecurityReference("Authorization", authorizationScopes));
-	 }	
-
+	 }
 	
 	private ApiInfo apiInfoV1() {
 		return new ApiInfoBuilder()
