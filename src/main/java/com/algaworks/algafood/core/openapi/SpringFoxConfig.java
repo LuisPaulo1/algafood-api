@@ -59,10 +59,14 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.HttpAuthenticationScheme;
 import springfox.documentation.service.Response;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
@@ -71,6 +75,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 	
 	@Bean
 	public Docket apiDocketV1() {
+		
+		authenticationScheme();
 		
 		var typeResolver = new TypeResolver();
 		
@@ -90,7 +96,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.additionalModels(typeResolver.resolve(Problem.class))
 				.ignoredParameterTypes(ServletWebRequest.class)
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
-				.directModelSubstitute(Links.class, LinksModelOpenApi.class)
+				.directModelSubstitute(Links.class, LinksModelOpenApi.class)				
 				.alternateTypeRules(newRule(PagedModel.class, CozinhaModel.class, CozinhasModelOpenApi.class))
 				.alternateTypeRules(newRule(PagedModel.class, PedidoResumoModel.class, PedidosResumoModelOpenApi.class))
 				.alternateTypeRules(newRule(List.class, RestauranteModel.class, RestauranteBasicoModelOpenApi.class))
@@ -102,11 +108,16 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.alternateTypeRules(newRule(PagedModel.class, PedidoResumoModel.class, PedidosResumoModelOpenApi.class))
 				.alternateTypeRules(newRule(CollectionModel.class, ProdutoModel.class, ProdutosModelOpenApi.class))
 				.alternateTypeRules(newRule(CollectionModel.class, RestauranteBasicoModel.class, RestaurantesBasicoModelOpenApi.class))
-				.alternateTypeRules(newRule(CollectionModel.class, UsuarioModel.class, UsuariosModelOpenApi.class));
+				.alternateTypeRules(newRule(CollectionModel.class, UsuarioModel.class, UsuariosModelOpenApi.class))
+				.securitySchemes(List.of(authenticationScheme()))
+				.securityContexts(List.of(securityContext()));
+		
 	}
 	
 	@Bean
 	public Docket apiDocketV2() {
+		
+		authenticationScheme();
 		
 		var typeResolver = new TypeResolver();
 		
@@ -127,7 +138,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
 				.directModelSubstitute(Links.class, LinksModelOpenApi.class)				
 				.alternateTypeRules(newRule(PagedModel.class, CozinhaModelV2.class, CozinhasModelV2OpenApi.class))				
-				.alternateTypeRules(newRule(CollectionModel.class, CidadeModelV2.class, CidadesModelV2OpenApi.class));
+				.alternateTypeRules(newRule(CollectionModel.class, CidadeModelV2.class, CidadesModelV2OpenApi.class))
+				.securitySchemes(List.of(authenticationScheme()))
+				.securityContexts(List.of(securityContext()));
 	}	
 	
 	private <T, M, K> AlternateTypeRule newRule(Class<T> returnType, Class<M> modelObject, Class<K> modelObjectOpenApi) {
@@ -137,6 +150,23 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				typeResolver.resolve(modelObjectOpenApi),
 				Ordered.HIGHEST_PRECEDENCE);		
 	}
+	
+	private HttpAuthenticationScheme authenticationScheme() {
+		return HttpAuthenticationScheme.JWT_BEARER_BUILDER.name("Authorization").build();
+	}
+	
+	private SecurityContext securityContext() {		
+		return SecurityContext.builder()
+				.securityReferences(securityReference()).build();
+	}
+	
+	 private List<SecurityReference> securityReference() {
+	        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+	        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+	        authorizationScopes[0] = authorizationScope;
+	        return List.of(new SecurityReference("Authorization", authorizationScopes));
+	 }	
+
 	
 	private ApiInfo apiInfoV1() {
 		return new ApiInfoBuilder()
