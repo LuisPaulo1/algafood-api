@@ -27,7 +27,7 @@ Importar o link no Postman: https://www.getpostman.com/collections/440a42ba288d8
 ## Como executar o projeto
 
 ### Pré-requisitos
-Java 11, Git e Docker em execução
+Docker em execução
 
 ```bash
 # clonar repositório
